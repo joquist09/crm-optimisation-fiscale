@@ -1,0 +1,97 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ title }} - CRM OF{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'conseiller_list' %}">Conseillers</a></li>
+        {% if conseiller %}
+            <li class="breadcrumb-item"><a href="{% url 'conseiller_detail' conseiller.pk %}">{{ conseiller.nom }} {{ conseiller.prenom }}</a></li>
+            <li class="breadcrumb-item active">Modifier</li>
+        {% else %}
+            <li class="breadcrumb-item active">Nouveau</li>
+        {% endif %}
+    </ol>
+</nav>
+
+<h1 class="page-title">
+    <i class="fas fa-user-tie"></i> {{ title }}
+</h1>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-edit me-2"></i> {{ title }}
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.nom.id_for_label }}" class="form-label fw-bold">Nom *</label>
+                                {{ form.nom }}
+                                {% if form.nom.errors %}
+                                    <div class="text-danger small">{{ form.nom.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.prenom.id_for_label }}" class="form-label fw-bold">Prénom *</label>
+                                {{ form.prenom }}
+                                {% if form.prenom.errors %}
+                                    <div class="text-danger small">{{ form.prenom.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.courriel.id_for_label }}" class="form-label fw-bold">Email *</label>
+                                {{ form.courriel }}
+                                {% if form.courriel.errors %}
+                                    <div class="text-danger small">{{ form.courriel.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.telephone.id_for_label }}" class="form-label fw-bold">Téléphone *</label>
+                                {{ form.telephone }}
+                                {% if form.telephone.errors %}
+                                    <div class="text-danger small">{{ form.telephone.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.langue.id_for_label }}" class="form-label fw-bold">Langue *</label>
+                        {{ form.langue }}
+                        {% if form.langue.errors %}
+                            <div class="text-danger small">{{ form.langue.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{% if conseiller %}{% url 'conseiller_detail' conseiller.pk %}{% else %}{% url 'conseiller_list' %}{% endif %}" 
+                           class="btn btn-secondary">
+                            <i class="fas fa-times me-2"></i> Annuler
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-2"></i> Enregistrer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

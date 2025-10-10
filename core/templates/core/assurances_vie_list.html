@@ -1,0 +1,108 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Assurances Vie - CRM OF{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title mb-0">
+        <i class="fas fa-shield-alt"></i> Assurances Vie
+    </h1>
+    <a href="{% url 'assurances_vie_create' %}" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i> Nouvelle assurance vie
+    </a>
+</div>
+
+<!-- Barre de recherche -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" class="row g-3">
+            <div class="col-md-10">
+                <input type="text" class="form-control" name="search" value="{{ search }}" 
+                       placeholder="Rechercher par nom de preneur ou personne assurée...">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-outline-primary w-100">
+                    <i class="fas fa-search me-2"></i> Rechercher
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Liste des assurances -->
+<div class="card">
+    <div class="card-body">
+        {% if assurances %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Catégorie</th>
+                            <th>Preneur</th>
+                            <th>Personne Assurée</th>
+                            <th>Type</th>
+                            <th>Police Existante</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for assurance in assurances %}
+                        <tr>
+                            <td>
+                                <span class="badge bg-primary">{{ assurance.get_categorie_display }}</span>
+                            </td>
+                            <td>
+                                {% if assurance.preneur_client %}
+                                    <a href="{% url 'client_detail' assurance.preneur_client.pk %}" class="text-decoration-none">
+                                        <strong>{{ assurance.preneur_client.nom }} {{ assurance.preneur_client.prenom }}</strong>
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">{{ assurance.preneur_externe }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if assurance.personne_assuree %}
+                                    <a href="{% url 'client_detail' assurance.personne_assuree.pk %}" class="text-decoration-none">
+                                        {{ assurance.personne_assuree.nom }} {{ assurance.personne_assuree.prenom }}
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">{{ assurance.personne_assuree_externe }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge bg-info">{{ assurance.get_type_display }}</span>
+                            </td>
+                            <td>
+                                {% if assurance.police_existante %}
+                                    <span class="badge bg-success">Oui</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Non</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    {% if assurance.preneur_client %}
+                                        <a href="{% url 'client_detail' assurance.preneur_client.pk %}" class="btn btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-shield-alt fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Aucune assurance vie trouvée</h5>
+                <p class="text-muted">Commencez par ajouter une assurance vie.</p>
+                <a href="{% url 'assurances_vie_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i> Ajouter une assurance vie
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,206 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Dashboard - CRM OF{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title mb-0">
+        <i class="fas fa-tachometer-alt"></i> Dashboard
+    </h1>
+    <a href="{% url 'export_csv' %}" class="btn btn-outline-primary btn-lg">
+        <i class="fas fa-download me-2"></i> Exporter toutes les données CSV
+    </a>
+</div>
+
+<!-- Statistiques -->
+<div class="row">
+    <div class="col-md-4">
+        <div class="stats-card">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-1">Conseillers</h5>
+                    <div class="stats-number">{{ conseillers_count }}</div>
+                </div>
+                <div class="text-muted">
+                    <i class="fas fa-user-tie fa-3x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stats-card">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-1">Clients</h5>
+                    <div class="stats-number">{{ clients_count }}</div>
+                </div>
+                <div class="text-muted">
+                    <i class="fas fa-users fa-3x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stats-card">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-1">Sociétés</h5>
+                    <div class="stats-number">{{ societes_count }}</div>
+                </div>
+                <div class="text-muted">
+                    <i class="fas fa-building fa-3x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Clients récents -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-users me-2"></i> Clients récents
+            </div>
+            <div class="card-body">
+                {% if recent_clients %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Conseiller</th>
+                                    <th>Province</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for client in recent_clients %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'client_detail' client.pk %}" class="text-decoration-none">
+                                            {{ client.nom }} {{ client.prenom }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        {% if client.conseiller %}
+                                            <a href="{% url 'conseiller_detail' client.conseiller.pk %}" class="text-decoration-none">
+                                                {{ client.conseiller.nom }} {{ client.conseiller.prenom }}
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted">Aucun</span>
+                                        {% endif %}
+                                    </td>
+                                    <td><span class="badge bg-secondary">{{ client.get_province_display }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center">
+                        <a href="{% url 'client_list' %}" class="btn btn-primary">
+                            <i class="fas fa-list me-2"></i> Voir tous les clients
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Aucun client</h5>
+                        <a href="{% url 'client_create' %}" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i> Créer le premier client
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Conseillers récents -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-user-tie me-2"></i> Conseillers récents
+            </div>
+            <div class="card-body">
+                {% if recent_conseillers %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Email</th>
+                                    <th>Langue</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for conseiller in recent_conseillers %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'conseiller_detail' conseiller.pk %}" class="text-decoration-none">
+                                            {{ conseiller.nom }} {{ conseiller.prenom }}
+                                        </a>
+                                    </td>
+                                    <td>{{ conseiller.courriel }}</td>
+                                    <td><span class="badge bg-info">{{ conseiller.get_langue_display }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center">
+                        <a href="{% url 'conseiller_list' %}" class="btn btn-primary">
+                            <i class="fas fa-list me-2"></i> Voir tous les conseillers
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-user-tie fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Aucun conseiller</h5>
+                        <a href="{% url 'conseiller_create' %}" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i> Créer le premier conseiller
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Actions rapides -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-bolt me-2"></i> Actions rapides
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'conseiller_create' %}" class="btn btn-success btn-lg w-100">
+                            <i class="fas fa-user-plus fa-2x mb-2"></i><br>
+                            Nouveau conseiller
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'client_create' %}" class="btn btn-primary btn-lg w-100">
+                            <i class="fas fa-user-plus fa-2x mb-2"></i><br>
+                            Nouveau client
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'societe_create' %}" class="btn btn-warning btn-lg w-100">
+                            <i class="fas fa-building fa-2x mb-2"></i><br>
+                            Nouvelle société
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'client_list' %}" class="btn btn-info btn-lg w-100">
+                            <i class="fas fa-search fa-2x mb-2"></i><br>
+                            Rechercher
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

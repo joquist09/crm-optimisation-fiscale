@@ -1,0 +1,99 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Sociétés - CRM OF{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title">
+        <i class="fas fa-building"></i> Sociétés
+    </h1>
+    <a href="{% url 'societe_create' %}" class="btn btn-success">
+        <i class="fas fa-plus me-2"></i> Nouvelle société
+    </a>
+</div>
+
+<!-- Barre de recherche -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-10">
+                <input type="text" class="form-control search-box" name="search" value="{{ search }}" 
+                       placeholder="Rechercher par nom de société ou client...">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-search me-2"></i> Rechercher
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Liste des sociétés -->
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-list me-2"></i> Liste des sociétés ({{ societes.count }})
+    </div>
+    <div class="card-body">
+        {% if societes %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Client</th>
+                            <th>Type</th>
+                            <th>Revenus</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for societe in societes %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'societe_detail' societe.pk %}" class="text-decoration-none fw-bold">
+                                    {{ societe.nom }}
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{% url 'client_detail' societe.client.pk %}" class="text-decoration-none">
+                                    {{ societe.client.nom }} {{ societe.client.prenom }}
+                                </a>
+                            </td>
+                            <td><span class="badge bg-primary">{{ societe.get_type_societe_display }}</span></td>
+                            <td>{{ societe.revenus|floatformat:2 }} $</td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{% url 'societe_detail' societe.pk %}" class="btn btn-outline-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{% url 'societe_edit' societe.pk %}" class="btn btn-outline-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-building fa-4x text-muted mb-3"></i>
+                <h4 class="text-muted">Aucune société trouvée</h4>
+                {% if search %}
+                    <p class="text-muted">Aucun résultat pour "{{ search }}"</p>
+                    <a href="{% url 'societe_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times me-2"></i> Effacer la recherche
+                    </a>
+                {% else %}
+                    <p class="text-muted">Commencez par créer votre première société</p>
+                    <a href="{% url 'societe_create' %}" class="btn btn-success">
+                        <i class="fas fa-plus me-2"></i> Créer une société
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

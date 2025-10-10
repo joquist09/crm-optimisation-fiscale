@@ -1,0 +1,174 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ title }} - CRM OF{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'client_list' %}">Clients</a></li>
+        {% if client %}
+            <li class="breadcrumb-item"><a href="{% url 'client_detail' client.pk %}">{{ client.nom }} {{ client.prenom }}</a></li>
+            <li class="breadcrumb-item active">Modifier</li>
+        {% else %}
+            <li class="breadcrumb-item active">Nouveau</li>
+        {% endif %}
+    </ol>
+</nav>
+
+<h1 class="page-title">
+    <i class="fas fa-user"></i> {{ title }}
+</h1>
+
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-edit me-2"></i> {{ title }}
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.nom.id_for_label }}" class="form-label fw-bold">Nom *</label>
+                                {{ form.nom }}
+                                {% if form.nom.errors %}
+                                    <div class="text-danger small">{{ form.nom.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.prenom.id_for_label }}" class="form-label fw-bold">Prénom *</label>
+                                {{ form.prenom }}
+                                {% if form.prenom.errors %}
+                                    <div class="text-danger small">{{ form.prenom.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.courriel.id_for_label }}" class="form-label fw-bold">Email *</label>
+                                {{ form.courriel }}
+                                {% if form.courriel.errors %}
+                                    <div class="text-danger small">{{ form.courriel.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.telephone.id_for_label }}" class="form-label fw-bold">Téléphone *</label>
+                                {{ form.telephone }}
+                                {% if form.telephone.errors %}
+                                    <div class="text-danger small">{{ form.telephone.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="{{ form.province.id_for_label }}" class="form-label fw-bold">Province *</label>
+                                {{ form.province }}
+                                {% if form.province.errors %}
+                                    <div class="text-danger small">{{ form.province.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="{{ form.etat_civil.id_for_label }}" class="form-label fw-bold">État civil *</label>
+                                {{ form.etat_civil }}
+                                {% if form.etat_civil.errors %}
+                                    <div class="text-danger small">{{ form.etat_civil.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="{{ form.sexe.id_for_label }}" class="form-label fw-bold">Sexe *</label>
+                                {{ form.sexe }}
+                                {% if form.sexe.errors %}
+                                    <div class="text-danger small">{{ form.sexe.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="{{ form.date_naissance.id_for_label }}" class="form-label fw-bold">Date de naissance *</label>
+                                {{ form.date_naissance }}
+                                {% if form.date_naissance.errors %}
+                                    <div class="text-danger small">{{ form.date_naissance.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="{{ form.langue.id_for_label }}" class="form-label fw-bold">Langue *</label>
+                                {{ form.langue }}
+                                {% if form.langue.errors %}
+                                    <div class="text-danger small">{{ form.langue.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="{{ form.conseiller.id_for_label }}" class="form-label fw-bold">Conseiller</label>
+                                {{ form.conseiller }}
+                                {% if form.conseiller.errors %}
+                                    <div class="text-danger small">{{ form.conseiller.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.conjoint.id_for_label }}" class="form-label fw-bold">Conjoint</label>
+                                {{ form.conjoint }}
+                                {% if form.conjoint.errors %}
+                                    <div class="text-danger small">{{ form.conjoint.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    {{ form.fumeur }}
+                                    <label class="form-check-label fw-bold" for="{{ form.fumeur.id_for_label }}">
+                                        Fumeur
+                                    </label>
+                                </div>
+                                {% if form.fumeur.errors %}
+                                    <div class="text-danger small">{{ form.fumeur.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{% if client %}{% url 'client_detail' client.pk %}{% else %}{% url 'client_list' %}{% endif %}" 
+                           class="btn btn-secondary">
+                            <i class="fas fa-times me-2"></i> Annuler
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-2"></i> Enregistrer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
