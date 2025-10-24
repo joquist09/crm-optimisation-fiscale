@@ -59,10 +59,18 @@
                         {% endif %}
                     </div>
 
-                    <h5 class="mt-4 mb-3">Informations financières</h5>
+                    <h5 class="mt-4 mb-3">Société Opérante</h5>
                     
+                    <div class="mb-3">
+                        <label for="{{ form.solde_crtg_operante.id_for_label }}" class="form-label fw-bold">Solde CRTG opérante</label>
+                        {{ form.solde_crtg_operante }}
+                        {% if form.solde_crtg_operante.errors %}
+                            <div class="text-danger small">{{ form.solde_crtg_operante.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label for="{{ form.revenus.id_for_label }}" class="form-label fw-bold">Revenus</label>
                                 {{ form.revenus }}
@@ -71,7 +79,28 @@
                                 {% endif %}
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="{{ form.date_debut_revenus.id_for_label }}" class="form-label fw-bold">Date début revenus</label>
+                                {{ form.date_debut_revenus }}
+                                {% if form.date_debut_revenus.errors %}
+                                    <div class="text-danger small">{{ form.date_debut_revenus.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="{{ form.date_fin_revenus.id_for_label }}" class="form-label fw-bold">Date fin revenus</label>
+                                {{ form.date_fin_revenus }}
+                                {% if form.date_fin_revenus.errors %}
+                                    <div class="text-danger small">{{ form.date_fin_revenus.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label for="{{ form.depenses_deductibles.id_for_label }}" class="form-label fw-bold">Dépenses déductibles</label>
                                 {{ form.depenses_deductibles }}
@@ -80,14 +109,54 @@
                                 {% endif %}
                             </div>
                         </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="{{ form.date_debut_depenses_ded.id_for_label }}" class="form-label fw-bold">Date début dépenses déd.</label>
+                                {{ form.date_debut_depenses_ded }}
+                                {% if form.date_debut_depenses_ded.errors %}
+                                    <div class="text-danger small">{{ form.date_debut_depenses_ded.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="{{ form.date_fin_depenses_ded.id_for_label }}" class="form-label fw-bold">Date fin dépenses déd.</label>
+                                {{ form.date_fin_depenses_ded }}
+                                {% if form.date_fin_depenses_ded.errors %}
+                                    <div class="text-danger small">{{ form.date_fin_depenses_ded.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="{{ form.depenses_non_deductibles.id_for_label }}" class="form-label fw-bold">Dépenses non déductibles</label>
-                        {{ form.depenses_non_deductibles }}
-                        {% if form.depenses_non_deductibles.errors %}
-                            <div class="text-danger small">{{ form.depenses_non_deductibles.errors.0 }}</div>
-                        {% endif %}
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="{{ form.depenses_non_deductibles.id_for_label }}" class="form-label fw-bold">Dépenses non déductibles</label>
+                                {{ form.depenses_non_deductibles }}
+                                {% if form.depenses_non_deductibles.errors %}
+                                    <div class="text-danger small">{{ form.depenses_non_deductibles.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="{{ form.date_debut_depenses_non_ded.id_for_label }}" class="form-label fw-bold">Date début dépenses non déd.</label>
+                                {{ form.date_debut_depenses_non_ded }}
+                                {% if form.date_debut_depenses_non_ded.errors %}
+                                    <div class="text-danger small">{{ form.date_debut_depenses_non_ded.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="{{ form.date_fin_depenses_non_ded.id_for_label }}" class="form-label fw-bold">Date fin dépenses non déd.</label>
+                                {{ form.date_fin_depenses_non_ded }}
+                                {% if form.date_fin_depenses_non_ded.errors %}
+                                    <div class="text-danger small">{{ form.date_fin_depenses_non_ded.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
 
                     <h5 class="mt-4 mb-3">Salaires</h5>
@@ -104,6 +173,27 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
+                                <label for="{{ form.date_debut_salaire_client.id_for_label }}" class="form-label fw-bold">Date début salaire client</label>
+                                {{ form.date_debut_salaire_client }}
+                                {% if form.date_debut_salaire_client.errors %}
+                                    <div class="text-danger small">{{ form.date_debut_salaire_client.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="{{ form.date_fin_salaire_client.id_for_label }}" class="form-label fw-bold">Date fin salaire client</label>
+                                {{ form.date_fin_salaire_client }}
+                                {% if form.date_fin_salaire_client.errors %}
+                                    <div class="text-danger small">{{ form.date_fin_salaire_client.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
                                 <label for="{{ form.salaire_conjoint.id_for_label }}" class="form-label fw-bold">Salaire conjoint</label>
                                 {{ form.salaire_conjoint }}
                                 {% if form.salaire_conjoint.errors %}
@@ -113,6 +203,27 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
+                                <label for="{{ form.date_debut_salaire_conjoint.id_for_label }}" class="form-label fw-bold">Date début salaire conjoint</label>
+                                {{ form.date_debut_salaire_conjoint }}
+                                {% if form.date_debut_salaire_conjoint.errors %}
+                                    <div class="text-danger small">{{ form.date_debut_salaire_conjoint.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="{{ form.date_fin_salaire_conjoint.id_for_label }}" class="form-label fw-bold">Date fin salaire conjoint</label>
+                                {{ form.date_fin_salaire_conjoint }}
+                                {% if form.date_fin_salaire_conjoint.errors %}
+                                    <div class="text-danger small">{{ form.date_fin_salaire_conjoint.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
                                 <label for="{{ form.salaire_employe.id_for_label }}" class="form-label fw-bold">Salaire employé</label>
                                 {{ form.salaire_employe }}
                                 {% if form.salaire_employe.errors %}
@@ -120,9 +231,27 @@
                                 {% endif %}
                             </div>
                         </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="{{ form.date_debut_salaire_employe.id_for_label }}" class="form-label fw-bold">Date début salaire employé</label>
+                                {{ form.date_debut_salaire_employe }}
+                                {% if form.date_debut_salaire_employe.errors %}
+                                    <div class="text-danger small">{{ form.date_debut_salaire_employe.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="{{ form.date_fin_salaire_employe.id_for_label }}" class="form-label fw-bold">Date fin salaire employé</label>
+                                {{ form.date_fin_salaire_employe }}
+                                {% if form.date_fin_salaire_employe.errors %}
+                                    <div class="text-danger small">{{ form.date_fin_salaire_employe.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
 
-                    <h5 class="mt-4 mb-3">Autres informations</h5>
+                    <h5 class="mt-4 mb-3">DPA et autres informations</h5>
                     
                     <div class="row">
                         <div class="col-md-4">
@@ -152,6 +281,109 @@
                                 {% endif %}
                             </div>
                         </div>
+                    </div>
+
+                    <h5 class="mt-4 mb-3">Société de Gestion</h5>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.solde_imrtd_non_determines.id_for_label }}" class="form-label fw-bold">Solde IMRTD non déterminés</label>
+                                {{ form.solde_imrtd_non_determines }}
+                                {% if form.solde_imrtd_non_determines.errors %}
+                                    <div class="text-danger small">{{ form.solde_imrtd_non_determines.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.solde_imrtd_determines.id_for_label }}" class="form-label fw-bold">Solde IMRTD déterminés</label>
+                                {{ form.solde_imrtd_determines }}
+                                {% if form.solde_imrtd_determines.errors %}
+                                    <div class="text-danger small">{{ form.solde_imrtd_determines.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.solde_cdc.id_for_label }}" class="form-label fw-bold">Solde CDC</label>
+                                {{ form.solde_cdc }}
+                                {% if form.solde_cdc.errors %}
+                                    <div class="text-danger small">{{ form.solde_cdc.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.solde_crtg_gestion.id_for_label }}" class="form-label fw-bold">Solde CRTG gestion</label>
+                                {{ form.solde_crtg_gestion }}
+                                {% if form.solde_crtg_gestion.errors %}
+                                    <div class="text-danger small">{{ form.solde_crtg_gestion.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.paqc_reportee.id_for_label }}" class="form-label fw-bold">PAQC reportée</label>
+                                {{ form.paqc_reportee }}
+                                {% if form.paqc_reportee.errors %}
+                                    <div class="text-danger small">{{ form.paqc_reportee.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.annee_maximale_paqc.id_for_label }}" class="form-label fw-bold">Année maximale PAQC</label>
+                                {{ form.annee_maximale_paqc }}
+                                {% if form.annee_maximale_paqc.errors %}
+                                    <div class="text-danger small">{{ form.annee_maximale_paqc.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="{{ form.perte_capitale.id_for_label }}" class="form-label fw-bold">Perte capitale</label>
+                                {{ form.perte_capitale }}
+                                {% if form.perte_capitale.errors %}
+                                    <div class="text-danger small">{{ form.perte_capitale.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="{{ form.pbr_actions_ordinaires.id_for_label }}" class="form-label fw-bold">PBR actions ordinaires</label>
+                                {{ form.pbr_actions_ordinaires }}
+                                {% if form.pbr_actions_ordinaires.errors %}
+                                    <div class="text-danger small">{{ form.pbr_actions_ordinaires.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="{{ form.capital_verse.id_for_label }}" class="form-label fw-bold">Capital versé</label>
+                                {{ form.capital_verse }}
+                                {% if form.capital_verse.errors %}
+                                    <div class="text-danger small">{{ form.capital_verse.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.actions_dividendes_discretionnaires.id_for_label }}" class="form-label fw-bold">Actions dividendes discrétionnaires</label>
+                        {{ form.actions_dividendes_discretionnaires }}
+                        {% if form.actions_dividendes_discretionnaires.errors %}
+                            <div class="text-danger small">{{ form.actions_dividendes_discretionnaires.errors.0 }}</div>
+                        {% endif %}
                     </div>
 
                     <div class="d-flex justify-content-between">

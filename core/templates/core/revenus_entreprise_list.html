@@ -1,0 +1,71 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Revenus d'entreprise - CRM OF{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title mb-0">
+        <i class="fas fa-briefcase"></i> Revenus d'entreprise
+    </h1>
+    <a href="{% url 'revenus_entreprise_create' %}" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i> Nouveau revenu d'entreprise
+    </a>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" class="row g-3">
+            <div class="col-md-10">
+                <input type="text" class="form-control" name="search" value="{{ search }}" 
+                       placeholder="Rechercher par nom de client...">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-outline-primary w-100">
+                    <i class="fas fa-search me-2"></i> Rechercher
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {% if revenus %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Client</th>
+                            <th>Période</th>
+                            <th>Revenus</th>
+                            <th>Dépenses déductibles</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for revenu in revenus %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'client_detail' revenu.client.pk %}" class="text-decoration-none">
+                                    <strong>{{ revenu.client.nom }} {{ revenu.client.prenom }}</strong>
+                                </a>
+                            </td>
+                            <td>{{ revenu.date_debut|date:"d/m/Y" }} - {{ revenu.date_fin|date:"d/m/Y" }}</td>
+                            <td><span class="badge bg-success">{{ revenu.revenus_entreprise|floatformat:2 }} $</span></td>
+                            <td>{{ revenu.depenses_deductibles|floatformat:2 }} $</td>
+                            <td>
+                                <a href="{% url 'client_detail' revenu.client.pk %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-muted text-center">Aucun revenu d'entreprise trouvé.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

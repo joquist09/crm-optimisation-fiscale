@@ -7,14 +7,18 @@ from datetime import datetime
 from .models import (
     Conseiller, Client, Societe, Enfant, RevenusEmploi, RevenusEntreprise,
     AutresRevenus, ActifPlacements, AssuranceVie, InformationsFiscalesClient,
-    RevenusRRQ, RevenusDividendes, FondPensionCD, FondPensionRRE, FondPensionPD,
-    BudgetPermanent, BudgetExtraordinaire, InformationsFiscalesSociete,
-    ProfilInvestisseur, Actif, FluxMonetaire
+    RevenusRRQ, RevenusDividendes, FondPensionCD, FondPensionRRE, ProjectionRRE, 
+    FondPensionPD, BudgetPermanent, BudgetExtraordinaire, InformationsFiscalesSociete,
+    ProfilInvestisseur, Actif, FluxMonetaire, CotisationComptePersonnel, ProjectionAssuranceVie
 )
 from .forms import (
     ConseillerForm, ClientForm, SocieteForm, EnfantForm,
-    RevenusEmploiForm, ActifPlacementsForm, AssuranceVieForm,
-    InformationsFiscalesClientForm, BudgetPermanentForm
+    RevenusEmploiForm, RevenusEntrepriseForm, AutresRevenusForm,
+    ActifPlacementsForm, AssuranceVieForm, InformationsFiscalesClientForm, 
+    BudgetPermanentForm, RevenusRRQForm, RevenusDividendesForm, FondPensionCDForm,
+    FondPensionRREForm, ProjectionRREForm, FondPensionPDForm, CotisationComptePersonnelForm,
+    BudgetExtraordinaireForm, ProjectionAssuranceVieForm, InformationsFiscalesSocieteForm,
+    ProfilInvestisseurForm, ActifForm, FluxMonetaireForm
 )
 
 def dashboard(request):
@@ -564,3 +568,505 @@ def export_csv(request):
         ])
 
     return response
+
+# Vues Revenus Entreprise
+def revenus_entreprise_list(request):
+    """Liste des revenus d'entreprise"""
+    search = request.GET.get('search', '')
+    revenus = RevenusEntreprise.objects.select_related('client').all()
+    
+    if search:
+        revenus = revenus.filter(
+            Q(client__nom__icontains=search) |
+            Q(client__prenom__icontains=search)
+        )
+    
+    return render(request, 'core/revenus_entreprise_list.html', {
+        'revenus': revenus,
+        'search': search
+    })
+
+def revenus_entreprise_create(request):
+    """Création d'un revenu d'entreprise"""
+    client_id = request.GET.get('client')
+    if request.method == 'POST':
+        form = RevenusEntrepriseForm(request.POST)
+        if form.is_valid():
+            revenu = form.save()
+            messages.success(request, 'Revenu d\'entreprise créé avec succès!')
+            return redirect('client_detail', pk=revenu.client.pk)
+    else:
+        form = RevenusEntrepriseForm()
+        if client_id:
+            form.fields['client'].initial = client_id
+    
+    return render(request, 'core/revenus_entreprise_form.html', {
+        'form': form,
+        'title': 'Ajouter un revenu d\'entreprise'
+    })
+
+# Vues Autres Revenus
+def autres_revenus_list(request):
+    """Liste des autres revenus"""
+    search = request.GET.get('search', '')
+    revenus = AutresRevenus.objects.select_related('client').all()
+    
+    if search:
+        revenus = revenus.filter(
+            Q(client__nom__icontains=search) |
+            Q(client__prenom__icontains=search) |
+            Q(description__icontains=search)
+        )
+    
+    return render(request, 'core/autres_revenus_list.html', {
+        'revenus': revenus,
+        'search': search
+    })
+
+def autres_revenus_create(request):
+    """Création d'un autre revenu"""
+    client_id = request.GET.get('client')
+    if request.method == 'POST':
+        form = AutresRevenusForm(request.POST)
+        if form.is_valid():
+            revenu = form.save()
+            messages.success(request, 'Autre revenu créé avec succès!')
+            return redirect('client_detail', pk=revenu.client.pk)
+    else:
+        form = AutresRevenusForm()
+        if client_id:
+            form.fields['client'].initial = client_id
+    
+    return render(request, 'core/autres_revenus_form.html', {
+        'form': form,
+        'title': 'Ajouter un autre revenu'
+    })
+
+# Vues Revenus RRQ
+def revenus_rrq_list(request):
+    """Liste des revenus RRQ"""
+    search = request.GET.get('search', '')
+    revenus = RevenusRRQ.objects.select_related('client').all()
+    
+    if search:
+        revenus = revenus.filter(
+            Q(client__nom__icontains=search) |
+            Q(client__prenom__icontains=search)
+        )
+    
+    return render(request, 'core/revenus_rrq_list.html', {
+        'revenus': revenus,
+        'search': search
+    })
+
+def revenus_rrq_create(request):
+    """Création d'un revenu RRQ"""
+    client_id = request.GET.get('client')
+    if request.method == 'POST':
+        form = RevenusRRQForm(request.POST)
+        if form.is_valid():
+            revenu = form.save()
+            messages.success(request, 'Revenu RRQ créé avec succès!')
+            return redirect('client_detail', pk=revenu.client.pk)
+    else:
+        form = RevenusRRQForm()
+        if client_id:
+            form.fields['client'].initial = client_id
+    
+    return render(request, 'core/revenus_rrq_form.html', {
+        'form': form,
+        'title': 'Ajouter un revenu RRQ'
+    })
+
+# Vues Revenus Dividendes
+def revenus_dividendes_list(request):
+    """Liste des revenus de dividendes"""
+    search = request.GET.get('search', '')
+    revenus = RevenusDividendes.objects.select_related('client', 'societe').all()
+    
+    if search:
+        revenus = revenus.filter(
+            Q(client__nom__icontains=search) |
+            Q(client__prenom__icontains=search) |
+            Q(societe__nom__icontains=search)
+        )
+    
+    return render(request, 'core/revenus_dividendes_list.html', {
+        'revenus': revenus,
+        'search': search
+    })
+
+def revenus_dividendes_create(request):
+    """Création d'un revenu de dividendes"""
+    client_id = request.GET.get('client')
+    if request.method == 'POST':
+        form = RevenusDividendesForm(request.POST)
+        if form.is_valid():
+            revenu = form.save()
+            messages.success(request, 'Revenu de dividendes créé avec succès!')
+            return redirect('client_detail', pk=revenu.client.pk)
+    else:
+        form = RevenusDividendesForm()
+        if client_id:
+            form.fields['client'].initial = client_id
+    
+    return render(request, 'core/revenus_dividendes_form.html', {
+        'form': form,
+        'title': 'Ajouter un revenu de dividendes'
+    })
+
+# Vues Fond Pension CD
+def fond_pension_cd_list(request):
+    """Liste des fonds de pension CD"""
+    search = request.GET.get('search', '')
+    fonds = FondPensionCD.objects.select_related('client').all()
+    
+    if search:
+        fonds = fonds.filter(
+            Q(client__nom__icontains=search) |
+            Q(client__prenom__icontains=search)
+        )
+    
+    return render(request, 'core/fond_pension_cd_list.html', {
+        'fonds': fonds,
+        'search': search
+    })
+
+def fond_pension_cd_create(request):
+    """Création d'un fond de pension CD"""
+    client_id = request.GET.get('client')
+    if request.method == 'POST':
+        form = FondPensionCDForm(request.POST)
+        if form.is_valid():
+            fond = form.save()
+            messages.success(request, 'Fond de pension CD créé avec succès!')
+            return redirect('client_detail', pk=fond.client.pk)
+    else:
+        form = FondPensionCDForm()
+        if client_id:
+            form.fields['client'].initial = client_id
+    
+    return render(request, 'core/fond_pension_cd_form.html', {
+        'form': form,
+        'title': 'Ajouter un fond de pension CD'
+    })
+
+# Vues Fond Pension RRE
+def fond_pension_rre_list(request):
+    """Liste des fonds de pension RRE"""
+    search = request.GET.get('search', '')
+    fonds = FondPensionRRE.objects.select_related('participant', 'promoteur').all()
+    
+    if search:
+        fonds = fonds.filter(
+            Q(participant__nom__icontains=search) |
+            Q(participant__prenom__icontains=search) |
+            Q(promoteur__nom__icontains=search)
+        )
+    
+    return render(request, 'core/fond_pension_rre_list.html', {
+        'fonds': fonds,
+        'search': search
+    })
+
+def fond_pension_rre_create(request):
+    """Création d'un fond de pension RRE"""
+    if request.method == 'POST':
+        form = FondPensionRREForm(request.POST)
+        if form.is_valid():
+            fond = form.save()
+            messages.success(request, 'Fond de pension RRE créé avec succès!')
+            return redirect('fond_pension_rre_list')
+    else:
+        form = FondPensionRREForm()
+    
+    return render(request, 'core/fond_pension_rre_form.html', {
+        'form': form,
+        'title': 'Ajouter un fond de pension RRE'
+    })
+
+# Vues Projection RRE
+def projection_rre_list(request):
+    """Liste des projections RRE"""
+    projections = ProjectionRRE.objects.select_related('fonds_pension_rre').all()
+    
+    return render(request, 'core/projection_rre_list.html', {
+        'projections': projections
+    })
+
+def projection_rre_create(request):
+    """Création d'une projection RRE"""
+    if request.method == 'POST':
+        form = ProjectionRREForm(request.POST)
+        if form.is_valid():
+            projection = form.save()
+            messages.success(request, 'Projection RRE créée avec succès!')
+            return redirect('projection_rre_list')
+    else:
+        form = ProjectionRREForm()
+    
+    return render(request, 'core/projection_rre_form.html', {
+        'form': form,
+        'title': 'Ajouter une projection RRE'
+    })
+
+# Vues Fond Pension PD
+def fond_pension_pd_list(request):
+    """Liste des fonds de pension PD"""
+    search = request.GET.get('search', '')
+    fonds = FondPensionPD.objects.select_related('client').all()
+    
+    if search:
+        fonds = fonds.filter(
+            Q(client__nom__icontains=search) |
+            Q(client__prenom__icontains=search)
+        )
+    
+    return render(request, 'core/fond_pension_pd_list.html', {
+        'fonds': fonds,
+        'search': search
+    })
+
+def fond_pension_pd_create(request):
+    """Création d'un fond de pension PD"""
+    client_id = request.GET.get('client')
+    if request.method == 'POST':
+        form = FondPensionPDForm(request.POST)
+        if form.is_valid():
+            fond = form.save()
+            messages.success(request, 'Fond de pension PD créé avec succès!')
+            return redirect('client_detail', pk=fond.client.pk)
+    else:
+        form = FondPensionPDForm()
+        if client_id:
+            form.fields['client'].initial = client_id
+    
+    return render(request, 'core/fond_pension_pd_form.html', {
+        'form': form,
+        'title': 'Ajouter un fond de pension PD'
+    })
+
+# Vues Cotisation Compte Personnel
+def cotisation_compte_personnel_list(request):
+    """Liste des cotisations de compte personnel"""
+    cotisations = CotisationComptePersonnel.objects.select_related('actif').all()
+    
+    return render(request, 'core/cotisation_compte_personnel_list.html', {
+        'cotisations': cotisations
+    })
+
+def cotisation_compte_personnel_create(request):
+    """Création d'une cotisation de compte personnel"""
+    if request.method == 'POST':
+        form = CotisationComptePersonnelForm(request.POST)
+        if form.is_valid():
+            cotisation = form.save()
+            messages.success(request, 'Cotisation de compte personnel créée avec succès!')
+            return redirect('cotisation_compte_personnel_list')
+    else:
+        form = CotisationComptePersonnelForm()
+    
+    return render(request, 'core/cotisation_compte_personnel_form.html', {
+        'form': form,
+        'title': 'Ajouter une cotisation de compte personnel'
+    })
+
+# Vues Budget Extraordinaire
+def budget_extraordinaire_list(request):
+    """Liste des budgets extraordinaires"""
+    search = request.GET.get('search', '')
+    budgets = BudgetExtraordinaire.objects.select_related('client').all()
+    
+    if search:
+        budgets = budgets.filter(
+            Q(client__nom__icontains=search) |
+            Q(client__prenom__icontains=search)
+        )
+    
+    return render(request, 'core/budget_extraordinaire_list.html', {
+        'budgets': budgets,
+        'search': search
+    })
+
+def budget_extraordinaire_create(request):
+    """Création d'un budget extraordinaire"""
+    client_id = request.GET.get('client')
+    if request.method == 'POST':
+        form = BudgetExtraordinaireForm(request.POST)
+        if form.is_valid():
+            budget = form.save()
+            messages.success(request, 'Budget extraordinaire créé avec succès!')
+            return redirect('client_detail', pk=budget.client.pk)
+    else:
+        form = BudgetExtraordinaireForm()
+        if client_id:
+            form.fields['client'].initial = client_id
+    
+    return render(request, 'core/budget_extraordinaire_form.html', {
+        'form': form,
+        'title': 'Ajouter un budget extraordinaire'
+    })
+
+# Vues Projection Assurance Vie
+def projection_assurance_vie_list(request):
+    """Liste des projections d'assurance vie"""
+    projections = ProjectionAssuranceVie.objects.select_related('assurance_vie').all()
+    
+    return render(request, 'core/projection_assurance_vie_list.html', {
+        'projections': projections
+    })
+
+def projection_assurance_vie_create(request):
+    """Création d'une projection d'assurance vie"""
+    if request.method == 'POST':
+        form = ProjectionAssuranceVieForm(request.POST)
+        if form.is_valid():
+            projection = form.save()
+            messages.success(request, 'Projection d\'assurance vie créée avec succès!')
+            return redirect('projection_assurance_vie_list')
+    else:
+        form = ProjectionAssuranceVieForm()
+    
+    return render(request, 'core/projection_assurance_vie_form.html', {
+        'form': form,
+        'title': 'Ajouter une projection d\'assurance vie'
+    })
+
+# Vues Informations Fiscales Société
+def informations_fiscales_societe_list(request):
+    """Liste des informations fiscales des sociétés"""
+    search = request.GET.get('search', '')
+    infos = InformationsFiscalesSociete.objects.select_related('societe').all()
+    
+    if search:
+        infos = infos.filter(Q(societe__nom__icontains=search))
+    
+    return render(request, 'core/informations_fiscales_societe_list.html', {
+        'infos': infos,
+        'search': search
+    })
+
+def informations_fiscales_societe_create(request):
+    """Création d'informations fiscales de société"""
+    societe_id = request.GET.get('societe')
+    if request.method == 'POST':
+        form = InformationsFiscalesSocieteForm(request.POST)
+        if form.is_valid():
+            info = form.save()
+            messages.success(request, 'Informations fiscales de société créées avec succès!')
+            return redirect('societe_detail', pk=info.societe.pk)
+    else:
+        form = InformationsFiscalesSocieteForm()
+        if societe_id:
+            form.fields['societe'].initial = societe_id
+    
+    return render(request, 'core/informations_fiscales_societe_form.html', {
+        'form': form,
+        'title': 'Ajouter des informations fiscales de société'
+    })
+
+# Vues Profil Investisseur
+def profil_investisseur_list(request):
+    """Liste des profils investisseur"""
+    search = request.GET.get('search', '')
+    profils = ProfilInvestisseur.objects.select_related('client').all()
+    
+    if search:
+        profils = profils.filter(
+            Q(client__nom__icontains=search) |
+            Q(client__prenom__icontains=search)
+        )
+    
+    return render(request, 'core/profil_investisseur_list.html', {
+        'profils': profils,
+        'search': search
+    })
+
+def profil_investisseur_create(request):
+    """Création d'un profil investisseur"""
+    client_id = request.GET.get('client')
+    if request.method == 'POST':
+        form = ProfilInvestisseurForm(request.POST)
+        if form.is_valid():
+            profil = form.save()
+            messages.success(request, 'Profil investisseur créé avec succès!')
+            return redirect('client_detail', pk=profil.client.pk)
+    else:
+        form = ProfilInvestisseurForm()
+        if client_id:
+            form.fields['client'].initial = client_id
+    
+    return render(request, 'core/profil_investisseur_form.html', {
+        'form': form,
+        'title': 'Ajouter un profil investisseur'
+    })
+
+# Vues Actif
+def actif_list(request):
+    """Liste des actifs"""
+    search = request.GET.get('search', '')
+    actifs = Actif.objects.select_related('client', 'societe').all()
+    
+    if search:
+        actifs = actifs.filter(
+            Q(client__nom__icontains=search) |
+            Q(client__prenom__icontains=search) |
+            Q(descriptif__icontains=search)
+        )
+    
+    return render(request, 'core/actif_list.html', {
+        'actifs': actifs,
+        'search': search
+    })
+
+def actif_create(request):
+    """Création d'un actif"""
+    client_id = request.GET.get('client')
+    if request.method == 'POST':
+        form = ActifForm(request.POST)
+        if form.is_valid():
+            actif = form.save()
+            messages.success(request, 'Actif créé avec succès!')
+            return redirect('client_detail', pk=actif.client.pk)
+    else:
+        form = ActifForm()
+        if client_id:
+            form.fields['client'].initial = client_id
+    
+    return render(request, 'core/actif_form.html', {
+        'form': form,
+        'title': 'Ajouter un actif'
+    })
+
+# Vues Flux Monétaire
+def flux_monetaire_list(request):
+    """Liste des flux monétaires"""
+    search = request.GET.get('search', '')
+    flux = FluxMonetaire.objects.select_related('societe').all()
+    
+    if search:
+        flux = flux.filter(Q(societe__nom__icontains=search))
+    
+    return render(request, 'core/flux_monetaire_list.html', {
+        'flux': flux,
+        'search': search
+    })
+
+def flux_monetaire_create(request):
+    """Création d'un flux monétaire"""
+    societe_id = request.GET.get('societe')
+    if request.method == 'POST':
+        form = FluxMonetaireForm(request.POST)
+        if form.is_valid():
+            flux = form.save()
+            messages.success(request, 'Flux monétaire créé avec succès!')
+            return redirect('societe_detail', pk=flux.societe.pk)
+    else:
+        form = FluxMonetaireForm()
+        if societe_id:
+            form.fields['societe'].initial = societe_id
+    
+    return render(request, 'core/flux_monetaire_form.html', {
+        'form': form,
+        'title': 'Ajouter un flux monétaire'
+    })

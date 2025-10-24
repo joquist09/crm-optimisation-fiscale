@@ -211,6 +211,46 @@
             background: linear-gradient(90deg, var(--navy-dark) 0%, var(--gold-accent) 100%);
             border-radius: 2px;
         }
+
+        /* Dropdown menu styles */
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+
+        .dropdown-item {
+            padding: 10px 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Sidebar scrollbar */
+        .sidebar {
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--gold-accent);
+            border-radius: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #c9a02b;
+        }
     </style>
 </head>
 <body>
@@ -245,6 +285,52 @@
                             <i class="fas fa-building"></i> Sociétés
                         </a>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownRevenus" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-coins"></i> Revenus
+                        </a>
+                        <ul class="dropdown-menu" style="background-color: var(--navy-medium);">
+                            <li><a class="dropdown-item text-white" href="{% url 'revenus_emploi_list' %}">Revenus emploi</a></li>
+                            <li><a class="dropdown-item text-white" href="{% url 'revenus_entreprise_list' %}">Revenus entreprise</a></li>
+                            <li><a class="dropdown-item text-white" href="{% url 'revenus_dividendes_list' %}">Revenus dividendes</a></li>
+                            <li><a class="dropdown-item text-white" href="{% url 'revenus_rrq_list' %}">Revenus RRQ</a></li>
+                            <li><a class="dropdown-item text-white" href="{% url 'autres_revenus_list' %}">Autres revenus</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownActifs" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-chart-pie"></i> Actifs
+                        </a>
+                        <ul class="dropdown-menu" style="background-color: var(--navy-medium);">
+                            <li><a class="dropdown-item text-white" href="{% url 'actifs_placements_list' %}">Actifs placements</a></li>
+                            <li><a class="dropdown-item text-white" href="{% url 'actif_list' %}">Actifs</a></li>
+                            <li><a class="dropdown-item text-white" href="{% url 'profil_investisseur_list' %}">Profils investisseur</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPensions" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-piggy-bank"></i> Pensions
+                        </a>
+                        <ul class="dropdown-menu" style="background-color: var(--navy-medium);">
+                            <li><a class="dropdown-item text-white" href="{% url 'fond_pension_cd_list' %}">Fonds CD</a></li>
+                            <li><a class="dropdown-item text-white" href="{% url 'fond_pension_rre_list' %}">Fonds RRE</a></li>
+                            <li><a class="dropdown-item text-white" href="{% url 'fond_pension_pd_list' %}">Fonds PD</a></li>
+                            <li><a class="dropdown-item text-white" href="{% url 'projection_rre_list' %}">Projections RRE</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAutres" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-ellipsis-h"></i> Plus
+                        </a>
+                        <ul class="dropdown-menu" style="background-color: var(--navy-medium);">
+                            <li><a class="dropdown-item text-white" href="{% url 'assurances_vie_list' %}">Assurances vie</a></li>
+                            <li><a class="dropdown-item text-white" href="{% url 'budget_extraordinaire_list' %}">Budgets extraordinaires</a></li>
+                            <li><a class="dropdown-item text-white" href="{% url 'flux_monetaire_list' %}">Flux monétaires</a></li>
+                            <li><a class="dropdown-item text-white" href="{% url 'informations_fiscales_societe_list' %}">Infos fiscales</a></li>
+                            <li><hr class="dropdown-divider" style="border-color: rgba(255,255,255,0.2);"></li>
+                            <li><a class="dropdown-item text-white" href="{% url 'export_csv' %}"><i class="fas fa-download me-2"></i>Export CSV</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -258,6 +344,10 @@
                     <a class="nav-link" href="{% url 'dashboard' %}">
                         <i class="fas fa-tachometer-alt me-2"></i> Dashboard
                     </a>
+                    
+                    <hr style="border-color: rgba(255,255,255,0.2);">
+                    <small class="text-white-50 px-3 mt-2">GESTION PRINCIPALE</small>
+                    
                     <a class="nav-link" href="{% url 'conseiller_list' %}">
                         <i class="fas fa-user-tie me-2"></i> Conseillers
                     </a>
@@ -267,29 +357,88 @@
                     <a class="nav-link" href="{% url 'societe_list' %}">
                         <i class="fas fa-building me-2"></i> Sociétés
                     </a>
+                    
                     <hr style="border-color: rgba(255,255,255,0.2);">
+                    <small class="text-white-50 px-3 mt-2">REVENUS</small>
+                    
                     <a class="nav-link" href="{% url 'revenus_emploi_list' %}">
-                        <i class="fas fa-money-bill-wave me-2"></i> Revenus emploi
+                        <i class="fas fa-briefcase me-2"></i> Revenus emploi
                     </a>
+                    <a class="nav-link" href="{% url 'revenus_entreprise_list' %}">
+                        <i class="fas fa-store me-2"></i> Revenus entreprise
+                    </a>
+                    <a class="nav-link" href="{% url 'revenus_dividendes_list' %}">
+                        <i class="fas fa-coins me-2"></i> Revenus dividendes
+                    </a>
+                    <a class="nav-link" href="{% url 'revenus_rrq_list' %}">
+                        <i class="fas fa-money-check me-2"></i> Revenus RRQ
+                    </a>
+                    <a class="nav-link" href="{% url 'autres_revenus_list' %}">
+                        <i class="fas fa-hand-holding-usd me-2"></i> Autres revenus
+                    </a>
+                    
+                    <hr style="border-color: rgba(255,255,255,0.2);">
+                    <small class="text-white-50 px-3 mt-2">PLACEMENTS & ACTIFS</small>
+                    
                     <a class="nav-link" href="{% url 'actifs_placements_list' %}">
-                        <i class="fas fa-chart-line me-2"></i> Actifs placements
+                        <i class="fas fa-chart-pie me-2"></i> Actifs placements
                     </a>
+                    <a class="nav-link" href="{% url 'actif_list' %}">
+                        <i class="fas fa-landmark me-2"></i> Actifs
+                    </a>
+                    <a class="nav-link" href="{% url 'profil_investisseur_list' %}">
+                        <i class="fas fa-user-chart me-2"></i> Profils investisseur
+                    </a>
+                    
+                    <hr style="border-color: rgba(255,255,255,0.2);">
+                    <small class="text-white-50 px-3 mt-2">FONDS DE PENSION</small>
+                    
+                    <a class="nav-link" href="{% url 'fond_pension_cd_list' %}">
+                        <i class="fas fa-piggy-bank me-2"></i> Fonds CD
+                    </a>
+                    <a class="nav-link" href="{% url 'fond_pension_rre_list' %}">
+                        <i class="fas fa-vault me-2"></i> Fonds RRE
+                    </a>
+                    <a class="nav-link" href="{% url 'fond_pension_pd_list' %}">
+                        <i class="fas fa-university me-2"></i> Fonds PD
+                    </a>
+                    <a class="nav-link" href="{% url 'projection_rre_list' %}">
+                        <i class="fas fa-chart-line me-2"></i> Projections RRE
+                    </a>
+                    
+                    <hr style="border-color: rgba(255,255,255,0.2);">
+                    <small class="text-white-50 px-3 mt-2">ASSURANCES</small>
+                    
                     <a class="nav-link" href="{% url 'assurances_vie_list' %}">
                         <i class="fas fa-shield-alt me-2"></i> Assurances vie
                     </a>
+                    <a class="nav-link" href="{% url 'projection_assurance_vie_list' %}">
+                        <i class="fas fa-heartbeat me-2"></i> Projections assurance
+                    </a>
+                    
+                    <hr style="border-color: rgba(255,255,255,0.2);">
+                    <small class="text-white-50 px-3 mt-2">BUDGETS & FINANCES</small>
+                    
+                    <a class="nav-link" href="{% url 'budget_extraordinaire_list' %}">
+                        <i class="fas fa-money-bill-alt me-2"></i> Budgets extra.
+                    </a>
+                    <a class="nav-link" href="{% url 'cotisation_compte_personnel_list' %}">
+                        <i class="fas fa-wallet me-2"></i> Cotisations
+                    </a>
+                    <a class="nav-link" href="{% url 'flux_monetaire_list' %}">
+                        <i class="fas fa-exchange-alt me-2"></i> Flux monétaires
+                    </a>
+                    
+                    <hr style="border-color: rgba(255,255,255,0.2);">
+                    <small class="text-white-50 px-3 mt-2">FISCAL</small>
+                    
+                    <a class="nav-link" href="{% url 'informations_fiscales_societe_list' %}">
+                        <i class="fas fa-file-invoice-dollar me-2"></i> Info fiscales société
+                    </a>
+                    
                     <hr style="border-color: rgba(255,255,255,0.2);">
                     <a class="nav-link" href="{% url 'export_csv' %}" style="background-color: var(--gold-accent); color: var(--navy-dark); font-weight: bold;">
                         <i class="fas fa-download me-2"></i> Export CSV
-                    </a>
-                    <hr style="border-color: rgba(255,255,255,0.2);">
-                    <a class="nav-link" href="{% url 'conseiller_create' %}">
-                        <i class="fas fa-plus me-2"></i> Nouveau conseiller
-                    </a>
-                    <a class="nav-link" href="{% url 'client_create' %}">
-                        <i class="fas fa-plus me-2"></i> Nouveau client
-                    </a>
-                    <a class="nav-link" href="{% url 'societe_create' %}">
-                        <i class="fas fa-plus me-2"></i> Nouvelle société
                     </a>
                 </nav>
             </div>

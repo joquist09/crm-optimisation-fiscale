@@ -53,8 +53,8 @@ class Societe(models.Model):
     salaire_employe = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     date_debut_salaire_employe = models.DateField(null=True, blank=True)
     date_fin_salaire_employe = models.DateField(null=True, blank=True)
-    dpa_federale = models.DecimalField(max_digits=12, decimal_places=2, default=0)
-    dpa_provinciale = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    dpa_federale = models.DecimalField(max_digits=12, decimal_places=2, default=0) # RENOMMER À DPE
+    dpa_provinciale = models.DecimalField(max_digits=12, decimal_places=2, default=0) ##
     pourcentage_benefices_investis = models.DecimalField(max_digits=5, decimal_places=2, default=0)
 
     ## Champs de societe gestion
