@@ -50,11 +50,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ofproject.wsgi.application'
 
+
+# Use Railway's DATABASE_URL if available, else fallback to SQLite
+import dj_database_url
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f'sqlite:///{BASE_DIR}/db.sqlite3'
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = []
