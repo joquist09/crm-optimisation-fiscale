@@ -24,13 +24,13 @@ class ClientForm(forms.ModelForm):
     class Meta:
         model = Client
         fields = [
-            'conseiller', 'nom', 'prenom', 'province', 'etat_civil', 'sexe',
+            'conseiller', 'prenom', 'nom', 'province', 'etat_civil', 'sexe',
             'courriel', 'telephone', 'langue', 'date_naissance', 'fumeur', 'conjoint'
         ]
         widgets = {
             'conseiller': forms.Select(attrs={'class': 'form-control'}),
-            'nom': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom'}),
             'prenom': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Prénom'}),
+            'nom': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom'}),
             'province': forms.Select(attrs={'class': 'form-control'}),
             'etat_civil': forms.Select(attrs={'class': 'form-control'}),
             'sexe': forms.Select(attrs={'class': 'form-control'}),
