@@ -479,99 +479,773 @@
     </div>
 </div>
 
-<!-- Revenus d'emploi -->
+<!-- TOUS LES REVENUS -->
 <div class="card mb-4">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <div>
-            <i class="fas fa-money-bill-wave me-2"></i> Revenus d'emploi
-        </div>
-        <a href="{% url 'revenus_emploi_create' %}?client={{ client.pk }}" class="btn btn-sm btn-success">
-            <i class="fas fa-plus me-1"></i> Ajouter un revenu
-        </a>
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0"><i class="fas fa-money-bill-wave me-2"></i> Tous les revenus</h5>
     </div>
     <div class="card-body">
-        {% if revenus_emploi %}
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Société</th>
-                            <th>Période</th>
-                            <th>Montant</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for revenu in revenus_emploi %}
-                        <tr>
-                            <td>
-                                {% if revenu.societe %}
-                                    <a href="{% url 'societe_detail' revenu.societe.pk %}" class="text-decoration-none">
-                                        {{ revenu.societe.nom }}
-                                    </a>
-                                {% else %}
-                                    <span class="text-muted">Non associée</span>
-                                {% endif %}
-                            </td>
-                            <td>{{ revenu.date_debut|date:"d/m/Y" }} - {{ revenu.date_fin|date:"d/m/Y" }}</td>
-                            <td><span class="badge bg-success">{{ revenu.revenus_emploi|floatformat:2 }} $</span></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% else %}
-            <div class="text-center py-3">
-                <i class="fas fa-money-bill-wave fa-3x text-muted mb-3"></i>
-                <h5 class="text-muted">Aucun revenu d'emploi</h5>
-                <a href="{% url 'revenus_emploi_create' %}?client={{ client.pk }}" class="btn btn-success">
-                    <i class="fas fa-plus me-2"></i> Ajouter le premier revenu
+        
+        <!-- Revenus d'emploi -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="text-success"><i class="fas fa-briefcase me-2"></i> Revenus d'emploi ({{ revenus_emploi.count }})</h6>
+                <a href="{% url 'revenus_emploi_create' %}?client={{ client.pk }}" class="btn btn-sm btn-outline-success">
+                    <i class="fas fa-plus me-1"></i> Ajouter
                 </a>
             </div>
-        {% endif %}
+            {% if revenus_emploi %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Société</th>
+                                <th>Période</th>
+                                <th>Montant</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for revenu in revenus_emploi %}
+                            <tr>
+                                <td>
+                                    {% if revenu.societe %}
+                                        <a href="{% url 'societe_detail' revenu.societe.pk %}" class="text-decoration-none">
+                                            {{ revenu.societe.nom }}
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">Non associée</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ revenu.date_debut|date:"d/m/Y" }} - {{ revenu.date_fin|date:"d/m/Y" }}</td>
+                                <td><span class="badge bg-success">{{ revenu.revenus_emploi|floatformat:2 }} $</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted small mb-0">Aucun revenu d'emploi</p>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        <!-- Revenus d'entreprise -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="text-success"><i class="fas fa-building me-2"></i> Revenus d'entreprise ({{ revenus_entreprise.count }})</h6>
+                <a href="{% url 'revenus_entreprise_create' %}?client={{ client.pk }}" class="btn btn-sm btn-outline-success">
+                    <i class="fas fa-plus me-1"></i> Ajouter
+                </a>
+            </div>
+            {% if revenus_entreprise %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Société</th>
+                                <th>Revenus</th>
+                                <th>Dépenses déductibles</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for revenu in revenus_entreprise %}
+                            <tr>
+                                <td>
+                                    {% if revenu.societe %}
+                                        <a href="{% url 'societe_detail' revenu.societe.pk %}" class="text-decoration-none">
+                                            {{ revenu.societe.nom }}
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">Non associée</span>
+                                    {% endif %}
+                                </td>
+                                <td><span class="badge bg-success">{{ revenu.revenus_entreprise|floatformat:2 }} $</span></td>
+                                <td><span class="badge bg-warning">{{ revenu.depenses_deductibles|floatformat:2 }} $</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted small mb-0">Aucun revenu d'entreprise</p>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        <!-- Revenus de dividendes -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="text-success"><i class="fas fa-chart-pie me-2"></i> Revenus de dividendes ({{ revenus_dividendes.count }})</h6>
+                <a href="{% url 'revenus_dividendes_create' %}?client={{ client.pk }}" class="btn btn-sm btn-outline-success">
+                    <i class="fas fa-plus me-1"></i> Ajouter
+                </a>
+            </div>
+            {% if revenus_dividendes %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Société</th>
+                                <th>Dividendes ordinaires</th>
+                                <th>Dividendes déterminés</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for revenu in revenus_dividendes %}
+                            <tr>
+                                <td>
+                                    {% if revenu.societe %}
+                                        <a href="{% url 'societe_detail' revenu.societe.pk %}" class="text-decoration-none">
+                                            {{ revenu.societe.nom }}
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">Non associée</span>
+                                    {% endif %}
+                                </td>
+                                <td><span class="badge bg-success">{{ revenu.dividende_ordinaire|default:0|floatformat:2 }} $</span></td>
+                                <td><span class="badge bg-success">{{ revenu.dividende_determine|default:0|floatformat:2 }} $</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted small mb-0">Aucun revenu de dividendes</p>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        <!-- Revenus RRQ -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="text-success"><i class="fas fa-user-clock me-2"></i> Revenus RRQ ({{ revenus_rrq.count }})</h6>
+                <a href="{% url 'revenus_rrq_create' %}?client={{ client.pk }}" class="btn btn-sm btn-outline-success">
+                    <i class="fas fa-plus me-1"></i> Ajouter
+                </a>
+            </div>
+            {% if revenus_rrq %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Début</th>
+                                <th>Montant</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for revenu in revenus_rrq %}
+                            <tr>
+                                <td><span class="badge bg-info">{{ revenu.get_type_display }}</span></td>
+                                <td>{{ revenu.date_debut_rrq_rpc|date:"d/m/Y" }}</td>
+                                <td><span class="badge bg-success">{{ revenu.rentes_revenus_rrq_rpc|floatformat:2 }} $</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted small mb-0">Aucun revenu RRQ</p>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        <!-- Autres revenus -->
+        <div class="mb-0">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="text-success"><i class="fas fa-coins me-2"></i> Autres revenus ({{ autres_revenus.count }})</h6>
+                <a href="{% url 'autres_revenus_create' %}?client={{ client.pk }}" class="btn btn-sm btn-outline-success">
+                    <i class="fas fa-plus me-1"></i> Ajouter
+                </a>
+            </div>
+            {% if autres_revenus %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Période</th>
+                                <th>Montant</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for revenu in autres_revenus %}
+                            <tr>
+                                <td><span class="badge bg-info">{{ revenu.get_type_display }}</span></td>
+                                <td>{{ revenu.date_debut|date:"d/m/Y" }} - {{ revenu.date_fin|date:"d/m/Y" }}</td>
+                                <td><span class="badge bg-success">{{ revenu.montant|floatformat:2 }} $</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted small mb-0">Aucun autre revenu</p>
+            {% endif %}
+        </div>
+
     </div>
 </div>
 
-<!-- Actifs placements -->
+<!-- PLACEMENTS ET ACTIFS -->
 <div class="card mb-4">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <div>
-            <i class="fas fa-chart-line me-2"></i> Actifs placements
-        </div>
-        <a href="{% url 'actifs_placements_create' %}?client={{ client.pk }}" class="btn btn-sm btn-success">
-            <i class="fas fa-plus me-1"></i> Ajouter un actif
-        </a>
+    <div class="card-header bg-info text-white">
+        <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i> Placements et actifs</h5>
     </div>
     <div class="card-body">
-        {% if actifs %}
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Type</th>
-                            <th>Description</th>
-                            <th>Montant</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for actif in actifs %}
-                        <tr>
-                            <td><span class="badge bg-info">{{ actif.get_type_display }}</span></td>
-                            <td>{{ actif.description }}</td>
-                            <td><span class="badge bg-success">{{ actif.montant|floatformat:2 }} $</span></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% else %}
-            <div class="text-center py-3">
-                <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
-                <h5 class="text-muted">Aucun actif placement</h5>
-                <a href="{% url 'actifs_placements_create' %}?client={{ client.pk }}" class="btn btn-success">
-                    <i class="fas fa-plus me-2"></i> Ajouter le premier actif
+        
+        <!-- Actifs placements -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="text-info"><i class="fas fa-wallet me-2"></i> Actifs placements ({{ actifs_placements.count }})</h6>
+                <a href="{% url 'actifs_placements_create' %}?client={{ client.pk }}" class="btn btn-sm btn-outline-info">
+                    <i class="fas fa-plus me-1"></i> Ajouter
                 </a>
             </div>
-        {% endif %}
+            {% if actifs_placements %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Montant</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for actif in actifs_placements %}
+                            <tr>
+                                <td><span class="badge bg-info">{{ actif.get_type_display }}</span></td>
+                                <td>{{ actif.description }}</td>
+                                <td><span class="badge bg-success">{{ actif.montant|floatformat:2 }} $</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted small mb-0">Aucun actif placement</p>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        <!-- Actifs -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="text-info"><i class="fas fa-box me-2"></i> Actifs ({{ actifs.count }})</h6>
+                <a href="{% url 'actif_create' %}?client={{ client.pk }}" class="btn btn-sm btn-outline-info">
+                    <i class="fas fa-plus me-1"></i> Ajouter
+                </a>
+            </div>
+            {% if actifs %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Descriptif</th>
+                                <th>Valeur marchande</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for actif in actifs %}
+                            <tr>
+                                <td><span class="badge bg-info">{{ actif.get_type_display }}</span></td>
+                                <td>{{ actif.descriptif|default:"—" }}</td>
+                                <td><span class="badge bg-success">{{ actif.juste_valeur_marchande|floatformat:2 }} $</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted small mb-0">Aucun actif</p>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        <!-- Profil investisseur -->
+        <div class="mb-0">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="text-info"><i class="fas fa-user-chart me-2"></i> Profil investisseur ({{ profil_investisseur.count }})</h6>
+                <a href="{% url 'profil_investisseur_create' %}?client={{ client.pk }}" class="btn btn-sm btn-outline-info">
+                    <i class="fas fa-plus me-1"></i> Ajouter
+                </a>
+            </div>
+            {% if profil_investisseur %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Profil</th>
+                                <th>Honoraires</th>
+                                <th>Taux roulement</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for profil in profil_investisseur %}
+                            <tr>
+                                <td><span class="badge bg-primary">{{ profil.get_profil_display }}</span></td>
+                                <td><span class="badge bg-info">{{ profil.get_honoraires_display }}</span></td>
+                                <td>{{ profil.taux_roulement_portefeuille|floatformat:2 }}%</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted small mb-0">Aucun profil investisseur</p>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+<!-- FONDS DE PENSION -->
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0"><i class="fas fa-piggy-bank me-2"></i> Fonds de pension</h5>
+    </div>
+    <div class="card-body">
+        
+        <!-- Fonds de pension CD -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="text-primary"><i class="fas fa-donate me-2"></i> Fonds de pension CD ({{ fonds_pension_cd.count }})</h6>
+                <a href="{% url 'fond_pension_cd_create' %}?client={{ client.pk }}" class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-plus me-1"></i> Ajouter
+                </a>
+            </div>
+            {% if fonds_pension_cd %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Période cotisation</th>
+                                <th>Cotisation totale</th>
+                                <th>Cotisation employeur</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for fond in fonds_pension_cd %}
+                            <tr>
+                                <td>{{ fond.date_debut_cotisation_totale|date:"d/m/Y" }} - {{ fond.date_fin_cotisation_totale|date:"d/m/Y" }}</td>
+                                <td><span class="badge bg-success">{{ fond.cotisation_totale|floatformat:2 }} $</span></td>
+                                <td><span class="badge bg-info">{{ fond.cotisation_employeur|floatformat:2 }} $</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted small mb-0">Aucun fonds de pension CD</p>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        <!-- Fonds de pension RRE -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="text-primary"><i class="fas fa-hand-holding-usd me-2"></i> Fonds de pension RRE ({{ fonds_pension_rre.count }})</h6>
+                <a href="{% url 'fond_pension_rre_create' %}?client={{ client.pk }}" class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-plus me-1"></i> Ajouter
+                </a>
+            </div>
+            {% if fonds_pension_rre %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Promoteur</th>
+                                <th>Solde immobilisé</th>
+                                <th>Solde CVA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for fond in fonds_pension_rre %}
+                            <tr>
+                                <td>
+                                    {% if fond.promoteur %}
+                                        <a href="{% url 'societe_detail' fond.promoteur.pk %}" class="text-decoration-none">
+                                            {{ fond.promoteur.nom }}
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td><span class="badge bg-success">{{ fond.solde_immobilise|floatformat:2 }} $</span></td>
+                                <td><span class="badge bg-info">{{ fond.solde_cva|floatformat:2 }} $</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted small mb-0">Aucun fonds de pension RRE</p>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        <!-- Projections RRE -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="text-primary"><i class="fas fa-chart-area me-2"></i> Projections RRE ({{ projections_rre.count }})</h6>
+                <a href="{% url 'projection_rre_create' %}?client={{ client.pk }}" class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-plus me-1"></i> Ajouter
+                </a>
+            </div>
+            {% if projections_rre %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Année</th>
+                                <th>Cotisations régulières</th>
+                                <th>Rente</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for projection in projections_rre %}
+                            <tr>
+                                <td>{{ projection.annee }}</td>
+                                <td><span class="badge bg-info">{{ projection.cotisation_regulieres|floatformat:2 }} $</span></td>
+                                <td><span class="badge bg-success">{{ projection.rente|floatformat:2 }} $</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted small mb-0">Aucune projection RRE</p>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        <!-- Fonds de pension PD -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="text-primary"><i class="fas fa-university me-2"></i> Fonds de pension PD ({{ fonds_pension_pd.count }})</h6>
+                <a href="{% url 'fond_pension_pd_create' %}?client={{ client.pk }}" class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-plus me-1"></i> Ajouter
+                </a>
+            </div>
+            {% if fonds_pension_pd %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Revenu pension 1</th>
+                                <th>Revenu pension 2</th>
+                                <th>Cotisation employé</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for fond in fonds_pension_pd %}
+                            <tr>
+                                <td><span class="badge bg-success">{{ fond.revenu_pension_1|floatformat:2 }} $</span></td>
+                                <td><span class="badge bg-success">{{ fond.revenu_pension_2|floatformat:2 }} $</span></td>
+                                <td><span class="badge bg-info">{{ fond.cotisation_employe|floatformat:2 }} $</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted small mb-0">Aucun fonds de pension PD</p>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        <!-- Cotisations compte personnel -->
+        <div class="mb-0">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="text-primary"><i class="fas fa-receipt me-2"></i> Cotisations compte personnel ({{ cotisations_compte_personnel.count }})</h6>
+                <a href="{% url 'cotisation_compte_personnel_create' %}?client={{ client.pk }}" class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-plus me-1"></i> Ajouter
+                </a>
+            </div>
+            {% if cotisations_compte_personnel %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Période</th>
+                                <th>Cotisation annuelle</th>
+                                <th>Indexation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cotisation in cotisations_compte_personnel %}
+                            <tr>
+                                <td>{{ cotisation.date_debut|date:"d/m/Y" }} - {{ cotisation.date_fin|date:"d/m/Y" }}</td>
+                                <td><span class="badge bg-success">{{ cotisation.cotisation_annuelle|floatformat:2 }} $</span></td>
+                                <td>{{ cotisation.indexation|default:0|floatformat:2 }}%</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted small mb-0">Aucune cotisation</p>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+<!-- ASSURANCES ET FINANCES -->
+<div class="card mb-4">
+    <div class="card-header bg-warning text-dark">
+        <h5 class="mb-0"><i class="fas fa-shield-alt me-2"></i> Assurances et finances</h5>
+    </div>
+    <div class="card-body">
+        
+        <!-- Assurances vie -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="text-warning"><i class="fas fa-heartbeat me-2"></i> Assurances vie ({{ assurances_vie.count }})</h6>
+                <a href="{% url 'assurances_vie_create' %}?client={{ client.pk }}" class="btn btn-sm btn-outline-warning">
+                    <i class="fas fa-plus me-1"></i> Ajouter
+                </a>
+            </div>
+            {% if assurances_vie %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Personne assurée</th>
+                                <th>Type</th>
+                                <th>Police existante</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for assurance in assurances_vie %}
+                            <tr>
+                                <td>
+                                    {% if assurance.personne_assuree %}
+                                        {{ assurance.personne_assuree }}
+                                    {% elif assurance.personne_assuree_externe %}
+                                        {{ assurance.personne_assuree_externe }}
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td><span class="badge bg-warning">{{ assurance.get_type_display }}</span></td>
+                                <td>
+                                    {% if assurance.police_existante %}
+                                        <span class="badge bg-success">Oui</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Non</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted small mb-0">Aucune assurance vie</p>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        <!-- Projections assurance vie -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="text-warning"><i class="fas fa-project-diagram me-2"></i> Projections assurance vie ({{ projections_assurance_vie.count }})</h6>
+                <a href="{% url 'projection_assurance_vie_create' %}?client={{ client.pk }}" class="btn btn-sm btn-outline-warning">
+                    <i class="fas fa-plus me-1"></i> Ajouter
+                </a>
+            </div>
+            {% if projections_assurance_vie %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Année</th>
+                                <th>Capital décès</th>
+                                <th>Valeur rachat</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for projection in projections_assurance_vie %}
+                            <tr>
+                                <td>{{ projection.annee|default:"—" }}</td>
+                                <td><span class="badge bg-danger">{{ projection.capital_deces|floatformat:2 }} $</span></td>
+                                <td><span class="badge bg-success">{{ projection.valeur_rachat|floatformat:2 }} $</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted small mb-0">Aucune projection</p>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        <!-- Budgets permanents -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="text-warning"><i class="fas fa-calendar-check me-2"></i> Budgets permanents ({{ budgets_permanents.count }})</h6>
+                <a href="{% url 'budget_permanent_create' %}?client={{ client.pk }}" class="btn btn-sm btn-outline-warning">
+                    <i class="fas fa-plus me-1"></i> Ajouter
+                </a>
+            </div>
+            {% if budgets_permanents %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date début</th>
+                                <th>Budget annuel</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for budget in budgets_permanents %}
+                            <tr>
+                                <td>{{ budget.date_debut_budget_annuel_permanent|date:"d/m/Y" }}</td>
+                                <td><span class="badge bg-success">{{ budget.budget_annuel_permanent|floatformat:2 }} $</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted small mb-0">Aucun budget permanent</p>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        <!-- Budgets extraordinaires -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="text-warning"><i class="fas fa-star me-2"></i> Budgets extraordinaires ({{ budgets_extraordinaires.count }})</h6>
+                <a href="{% url 'budget_extraordinaire_create' %}?client={{ client.pk }}" class="btn btn-sm btn-outline-warning">
+                    <i class="fas fa-plus me-1"></i> Ajouter
+                </a>
+            </div>
+            {% if budgets_extraordinaires %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Période</th>
+                                <th>Montant</th>
+                                <th>Indexation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for budget in budgets_extraordinaires %}
+                            <tr>
+                                <td>{{ budget.date_debut|date:"d/m/Y" }} - {{ budget.date_fin|date:"d/m/Y" }}</td>
+                                <td><span class="badge bg-success">{{ budget.budget_extraordinaire|default:0|floatformat:2 }} $</span></td>
+                                <td>{{ budget.indexation|default:0|floatformat:2 }}%</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted small mb-0">Aucun budget extraordinaire</p>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        <!-- Flux monétaires -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="text-warning"><i class="fas fa-exchange-alt me-2"></i> Flux monétaires ({{ flux_monetaires.count }})</h6>
+                <a href="{% url 'flux_monetaire_create' %}?client={{ client.pk }}" class="btn btn-sm btn-outline-warning">
+                    <i class="fas fa-plus me-1"></i> Ajouter
+                </a>
+            </div>
+            {% if flux_monetaires %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Société</th>
+                                <th>Année</th>
+                                <th>Entrées imposables</th>
+                                <th>Sorties déductibles</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for flux in flux_monetaires %}
+                            <tr>
+                                <td>
+                                    {% if flux.societe %}
+                                        <a href="{% url 'societe_detail' flux.societe.pk %}" class="text-decoration-none">
+                                            {{ flux.societe.nom }}
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ flux.annee }}</td>
+                                <td><span class="badge bg-success">{{ flux.entree_fonds_imposable|floatformat:2 }} $</span></td>
+                                <td><span class="badge bg-warning">{{ flux.sortie_fonds_deductible|floatformat:2 }} $</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted small mb-0">Aucun flux monétaire</p>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        <!-- Informations fiscales -->
+        <div class="mb-0">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="text-warning"><i class="fas fa-file-invoice-dollar me-2"></i> Informations fiscales ({{ informations_fiscales.count }})</h6>
+                <a href="{% url 'informations_fiscales_client_create' %}?client={{ client.pk }}" class="btn btn-sm btn-outline-warning">
+                    <i class="fas fa-plus me-1"></i> Ajouter
+                </a>
+            </div>
+            {% if informations_fiscales %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Droits REER</th>
+                                <th>Droits CELI</th>
+                                <th>Droits CELIAPP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for info in informations_fiscales %}
+                            <tr>
+                                <td><span class="badge bg-info">{{ info.droits_reer_inutilises|floatformat:2 }} $</span></td>
+                                <td><span class="badge bg-info">{{ info.droits_celi_inutilises|floatformat:2 }} $</span></td>
+                                <td><span class="badge bg-info">{{ info.droits_celiapp|floatformat:2 }} $</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted small mb-0">Aucune information fiscale</p>
+            {% endif %}
+        </div>
+
     </div>
 </div>
 {% endblock %}

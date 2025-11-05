@@ -78,6 +78,10 @@ urlpatterns = [
     path('cotisations-compte-personnel/', views.cotisation_compte_personnel_list, name='cotisation_compte_personnel_list'),
     path('cotisations-compte-personnel/nouvelle/', views.cotisation_compte_personnel_create, name='cotisation_compte_personnel_create'),
     
+    # Budgets Permanents
+    path('budgets-permanents/', views.budget_permanent_list, name='budget_permanent_list'),
+    path('budgets-permanents/nouveau/', views.budget_permanent_create, name='budget_permanent_create'),
+    
     # Budgets Extraordinaires
     path('budgets-extraordinaires/', views.budget_extraordinaire_list, name='budget_extraordinaire_list'),
     path('budgets-extraordinaires/nouveau/', views.budget_extraordinaire_create, name='budget_extraordinaire_create'),
@@ -89,6 +93,10 @@ urlpatterns = [
     # Informations Fiscales Société
     path('informations-fiscales-societe/', views.informations_fiscales_societe_list, name='informations_fiscales_societe_list'),
     path('informations-fiscales-societe/nouvelle/', views.informations_fiscales_societe_create, name='informations_fiscales_societe_create'),
+    
+    # Informations Fiscales Client
+    path('informations-fiscales-client/', views.informations_fiscales_client_list, name='informations_fiscales_client_list'),
+    path('informations-fiscales-client/nouvelle/', views.informations_fiscales_client_create, name='informations_fiscales_client_create'),
     
     # Profils Investisseur
     path('profils-investisseur/', views.profil_investisseur_list, name='profil_investisseur_list'),

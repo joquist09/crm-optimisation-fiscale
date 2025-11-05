@@ -130,17 +130,65 @@ def client_list(request):
 def client_detail(request, pk):
     """Détail d'un client"""
     client = get_object_or_404(Client, pk=pk)
+    
+    # Sociétés et Enfants
     societes = client.societe_set.all()
     enfants = client.enfants.all()
+    
+    # Revenus groupés
     revenus_emploi = client.revenus_emploi.all()
-    actifs = client.actifs_placements.all()
+    revenus_entreprise = client.revenus_entreprise.all()
+    revenus_dividendes = client.revenus_dividendes.all()
+    revenus_rrq = client.revenus_rrq.all()
+    autres_revenus = client.revenus_personnels.all()  # related_name="revenus_personnels"
+    
+    # Placements et Actifs
+    actifs_placements = client.actifs_placements.all()
+    actifs = client.actif_set.all()  # No related_name, so Django uses default
+    profil_investisseur = client.profilinvestisseur_set.all()  # No related_name
+    
+    # Fonds de pension
+    fonds_pension_cd = client.fondpensioncd_set.all()  # No related_name
+    fonds_pension_rre = client.fondpensionrre_set.all()  # No related_name
+    projections_rre = ProjectionRRE.objects.filter(fonds_pension_rre__participant=client)  # Through relation
+    fonds_pension_pd = client.fondpensionpd_set.all()  # No related_name
+    cotisations_compte_personnel = CotisationComptePersonnel.objects.filter(actif__client=client)  # Through relation
+    
+    # Assurances et finances
+    assurances_vie = client.assurances_assuree.all()  # related_name="assurances_assuree"
+    projections_assurance_vie = ProjectionAssuranceVie.objects.filter(assurance_vie__personne_assuree=client)  # Through relation
+    budgets_permanents = client.budget_permanent.all()  # related_name="budget_permanent"
+    budgets_extraordinaires = client.budget_extraordinaire.all()  # related_name="budget_extraordinaire"
+    flux_monetaires = FluxMonetaire.objects.filter(societe__client=client)  # Through relation
+    informations_fiscales = client.informationsfiscalesclient_set.all()  # No related_name
     
     return render(request, 'core/client_detail.html', {
         'client': client,
         'societes': societes,
         'enfants': enfants,
+        # Revenus
         'revenus_emploi': revenus_emploi,
-        'actifs': actifs
+        'revenus_entreprise': revenus_entreprise,
+        'revenus_dividendes': revenus_dividendes,
+        'revenus_rrq': revenus_rrq,
+        'autres_revenus': autres_revenus,
+        # Placements
+        'actifs_placements': actifs_placements,
+        'actifs': actifs,
+        'profil_investisseur': profil_investisseur,
+        # Pensions
+        'fonds_pension_cd': fonds_pension_cd,
+        'fonds_pension_rre': fonds_pension_rre,
+        'projections_rre': projections_rre,
+        'fonds_pension_pd': fonds_pension_pd,
+        'cotisations_compte_personnel': cotisations_compte_personnel,
+        # Assurances et finances
+        'assurances_vie': assurances_vie,
+        'projections_assurance_vie': projections_assurance_vie,
+        'budgets_permanents': budgets_permanents,
+        'budgets_extraordinaires': budgets_extraordinaires,
+        'flux_monetaires': flux_monetaires,
+        'informations_fiscales': informations_fiscales,
     })
 
 def client_create(request):
@@ -871,6 +919,42 @@ def cotisation_compte_personnel_create(request):
         'title': 'Ajouter une cotisation de compte personnel'
     })
 
+# Vues Budget Permanent
+def budget_permanent_list(request):
+    """Liste des budgets permanents"""
+    search = request.GET.get('search', '')
+    budgets = BudgetPermanent.objects.select_related('client').all()
+    
+    if search:
+        budgets = budgets.filter(
+            Q(client__nom__icontains=search) |
+            Q(client__prenom__icontains=search)
+        )
+    
+    return render(request, 'core/budget_permanent_list.html', {
+        'budgets': budgets,
+        'search': search
+    })
+
+def budget_permanent_create(request):
+    """Création d'un budget permanent"""
+    client_id = request.GET.get('client')
+    if request.method == 'POST':
+        form = BudgetPermanentForm(request.POST)
+        if form.is_valid():
+            budget = form.save()
+            messages.success(request, 'Budget permanent créé avec succès!')
+            return redirect('client_detail', pk=budget.client.pk)
+    else:
+        form = BudgetPermanentForm()
+        if client_id:
+            form.fields['client'].initial = client_id
+    
+    return render(request, 'core/budget_permanent_form.html', {
+        'form': form,
+        'title': 'Ajouter un budget permanent'
+    })
+
 # Vues Budget Extraordinaire
 def budget_extraordinaire_list(request):
     """Liste des budgets extraordinaires"""
@@ -1069,4 +1153,40 @@ def flux_monetaire_create(request):
     return render(request, 'core/flux_monetaire_form.html', {
         'form': form,
         'title': 'Ajouter un flux monétaire'
+    })
+
+# Informations Fiscales Client
+def informations_fiscales_client_list(request):
+    """Liste des informations fiscales client"""
+    query = request.GET.get('q', '')
+    informations = InformationsFiscalesClient.objects.select_related('client').all()
+    
+    if query:
+        informations = informations.filter(
+            Q(client__nom__icontains=query) | Q(client__prenom__icontains=query)
+        )
+    
+    return render(request, 'core/informations_fiscales_client_list.html', {
+        'informations': informations,
+        'query': query
+    })
+
+
+def informations_fiscales_client_create(request):
+    """Création d'informations fiscales client"""
+    client_id = request.GET.get('client')
+    if request.method == 'POST':
+        form = InformationsFiscalesClientForm(request.POST)
+        if form.is_valid():
+            info = form.save()
+            messages.success(request, 'Informations fiscales créées avec succès!')
+            return redirect('client_detail', pk=info.client.pk)
+    else:
+        form = InformationsFiscalesClientForm()
+        if client_id:
+            form.fields['client'].initial = client_id
+    
+    return render(request, 'core/informations_fiscales_client_form.html', {
+        'form': form,
+        'title': 'Ajouter informations fiscales client'
     })
