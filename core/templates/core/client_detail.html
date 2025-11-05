@@ -11,22 +11,272 @@
     </ol>
 </nav>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="page-title">
+<div class="mb-4">
+    <h1 class="page-title mb-4">
         <i class="fas fa-user"></i> {{ client.nom }} {{ client.prenom }}
     </h1>
-    <div>
-        <a href="{% url 'client_edit' client.pk %}" class="btn btn-warning">
-            <i class="fas fa-edit me-2"></i> Modifier
-        </a>
-        <a href="{% url 'societe_create' %}?client={{ client.pk }}" class="btn btn-primary">
-            <i class="fas fa-building me-2"></i> Ajouter société
-        </a>
-        <a href="{% url 'enfant_create' %}?client={{ client.pk }}" class="btn btn-success">
-            <i class="fas fa-child me-2"></i> Ajouter enfant
-        </a>
+    
+    <!-- All Actions Collapsible -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">
+                <button class="btn btn-link text-decoration-none text-white w-100 text-start d-flex justify-content-between align-items-center" 
+                        type="button" 
+                        data-bs-toggle="collapse" 
+                        data-bs-target="#actionsRapidesCollapse" 
+                        aria-expanded="false" 
+                        aria-controls="actionsRapidesCollapse">
+                    <span><i class="fas fa-plus-circle me-2"></i>Actions rapides pour ce client</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </h5>
+        </div>
+        <div id="actionsRapidesCollapse" class="collapse">
+            <div class="card-body">
+    
+    <!-- Quick Action Links for this Client -->
+    <h6 class="text-muted mb-3">Actions principales</h6>
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-sm-6">
+            <a href="{% url 'client_edit' client.pk %}" class="text-decoration-none">
+                <div class="card h-100 border-warning hover-shadow">
+                    <div class="card-body text-center py-3">
+                        <i class="fas fa-edit fa-2x text-warning mb-2"></i>
+                        <h6 class="card-title mb-0">Modifier le client</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <a href="{% url 'societe_create' %}?client={{ client.pk }}" class="text-decoration-none">
+                <div class="card h-100 border-primary hover-shadow">
+                    <div class="card-body text-center py-3">
+                        <i class="fas fa-building fa-2x text-primary mb-2"></i>
+                        <h6 class="card-title mb-0">Ajouter société</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <a href="{% url 'enfant_create' %}?client={{ client.pk }}" class="text-decoration-none">
+                <div class="card h-100 border-success hover-shadow">
+                    <div class="card-body text-center py-3">
+                        <i class="fas fa-child fa-2x text-success mb-2"></i>
+                        <h6 class="card-title mb-0">Ajouter enfant</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <a href="{% url 'revenus_emploi_create' %}?client={{ client.pk }}" class="text-decoration-none">
+                <div class="card h-100 border-info hover-shadow">
+                    <div class="card-body text-center py-3">
+                        <i class="fas fa-money-bill-wave fa-2x text-info mb-2"></i>
+                        <h6 class="card-title mb-0">Ajouter revenu emploi</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <hr class="my-4">
+    
+    <!-- Revenus Section -->
+    <h6 class="text-muted mb-2"><i class="fas fa-dollar-sign me-2"></i>Revenus</h6>
+    <div class="row g-2 mb-3">
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+            <a href="{% url 'revenus_emploi_create' %}?client={{ client.pk }}" class="text-decoration-none">
+                <div class="card border-success hover-shadow">
+                    <div class="card-body text-center p-2">
+                        <i class="fas fa-briefcase text-success mb-1"></i>
+                        <small class="d-block">Revenus emploi</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+            <a href="{% url 'revenus_entreprise_create' %}?client={{ client.pk }}" class="text-decoration-none">
+                <div class="card border-success hover-shadow">
+                    <div class="card-body text-center p-2">
+                        <i class="fas fa-industry text-success mb-1"></i>
+                        <small class="d-block">Revenus entreprise</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+            <a href="{% url 'revenus_dividendes_create' %}?client={{ client.pk }}" class="text-decoration-none">
+                <div class="card border-success hover-shadow">
+                    <div class="card-body text-center p-2">
+                        <i class="fas fa-hand-holding-usd text-success mb-1"></i>
+                        <small class="d-block">Revenus dividendes</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+            <a href="{% url 'revenus_rrq_create' %}?client={{ client.pk }}" class="text-decoration-none">
+                <div class="card border-success hover-shadow">
+                    <div class="card-body text-center p-2">
+                        <i class="fas fa-receipt text-success mb-1"></i>
+                        <small class="d-block">Revenus RRQ</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+            <a href="{% url 'autres_revenus_create' %}?client={{ client.pk }}" class="text-decoration-none">
+                <div class="card border-success hover-shadow">
+                    <div class="card-body text-center p-2">
+                        <i class="fas fa-coins text-success mb-1"></i>
+                        <small class="d-block">Autres revenus</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Placements Section -->
+    <h6 class="text-muted mb-2"><i class="fas fa-chart-line me-2"></i>Placements & Actifs</h6>
+    <div class="row g-2 mb-3">
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+            <a href="{% url 'actifs_placements_create' %}?client={{ client.pk }}" class="text-decoration-none">
+                <div class="card border-primary hover-shadow">
+                    <div class="card-body text-center p-2">
+                        <i class="fas fa-chart-pie text-primary mb-1"></i>
+                        <small class="d-block">Actifs placements</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+            <a href="{% url 'actif_create' %}?client={{ client.pk }}" class="text-decoration-none">
+                <div class="card border-primary hover-shadow">
+                    <div class="card-body text-center p-2">
+                        <i class="fas fa-landmark text-primary mb-1"></i>
+                        <small class="d-block">Actifs</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+            <a href="{% url 'profil_investisseur_create' %}?client={{ client.pk }}" class="text-decoration-none">
+                <div class="card border-primary hover-shadow">
+                    <div class="card-body text-center p-2">
+                        <i class="fas fa-user-chart text-primary mb-1"></i>
+                        <small class="d-block">Profils investisseur</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Pensions Section -->
+    <h6 class="text-muted mb-2"><i class="fas fa-piggy-bank me-2"></i>Fonds de pension</h6>
+    <div class="row g-2 mb-3">
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+            <a href="{% url 'fond_pension_cd_create' %}?client={{ client.pk }}" class="text-decoration-none">
+                <div class="card border-info hover-shadow">
+                    <div class="card-body text-center p-2">
+                        <i class="fas fa-university text-info mb-1"></i>
+                        <small class="d-block">Fonds CD</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+            <a href="{% url 'fond_pension_rre_create' %}?client={{ client.pk }}" class="text-decoration-none">
+                <div class="card border-info hover-shadow">
+                    <div class="card-body text-center p-2">
+                        <i class="fas fa-file-invoice-dollar text-info mb-1"></i>
+                        <small class="d-block">Fonds RRE</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+            <a href="{% url 'fond_pension_pd_create' %}?client={{ client.pk }}" class="text-decoration-none">
+                <div class="card border-info hover-shadow">
+                    <div class="card-body text-center p-2">
+                        <i class="fas fa-money-check-alt text-info mb-1"></i>
+                        <small class="d-block">Fonds PD</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+            <a href="{% url 'projection_rre_create' %}?client={{ client.pk }}" class="text-decoration-none">
+                <div class="card border-info hover-shadow">
+                    <div class="card-body text-center p-2">
+                        <i class="fas fa-chart-area text-info mb-1"></i>
+                        <small class="d-block">Projections RRE</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Assurances & Finances Section -->
+    <h6 class="text-muted mb-2"><i class="fas fa-shield-alt me-2"></i>Assurances & Finances</h6>
+    <div class="row g-2 mb-3">
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+            <a href="{% url 'assurances_vie_create' %}?client={{ client.pk }}" class="text-decoration-none">
+                <div class="card border-warning hover-shadow">
+                    <div class="card-body text-center p-2">
+                        <i class="fas fa-heartbeat text-warning mb-1"></i>
+                        <small class="d-block">Assurances vie</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+            <a href="{% url 'budget_extraordinaire_create' %}?client={{ client.pk }}" class="text-decoration-none">
+                <div class="card border-warning hover-shadow">
+                    <div class="card-body text-center p-2">
+                        <i class="fas fa-calculator text-warning mb-1"></i>
+                        <small class="d-block">Budgets extraordinaires</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+            <a href="{% url 'flux_monetaire_create' %}?client={{ client.pk }}" class="text-decoration-none">
+                <div class="card border-warning hover-shadow">
+                    <div class="card-body text-center p-2">
+                        <i class="fas fa-exchange-alt text-warning mb-1"></i>
+                        <small class="d-block">Flux monétaires</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+            <a href="{% url 'informations_fiscales_societe_create' %}?client={{ client.pk }}" class="text-decoration-none">
+                <div class="card border-warning hover-shadow">
+                    <div class="card-body text-center p-2">
+                        <i class="fas fa-file-invoice text-warning mb-1"></i>
+                        <small class="d-block">Infos fiscales</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<style>
+.hover-shadow {
+    transition: all 0.3s ease;
+}
+.hover-shadow:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transform: translateY(-3px);
+}
+.btn-link:focus {
+    box-shadow: none;
+}
+</style>
 
 <div class="row">
     <!-- Informations personnelles -->

@@ -51,13 +51,25 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ofproject.wsgi.application'
 
 
-# Use Railway's DATABASE_URL if available, else fallback to SQLite
-import dj_database_url
-DATABASES = {
-    'default': dj_database_url.config(
-        default=f'sqlite:///{BASE_DIR}/db.sqlite3'
-    )
-}
+# Database configuration
+# Use Railway's DATABASE_URL for production (PostgreSQL), SQLite for local development
+if os.environ.get('DATABASE_URL'):
+    # Production: Railway with PostgreSQL
+    import dj_database_url
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=f'sqlite:///{BASE_DIR}/db.sqlite3',
+            conn_max_age=600
+        )
+    }
+else:
+    # Local development: SQLite
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = []
 
@@ -76,3 +88,16 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# CSRF Configuration for Railway deployment
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.railway.app',
+    'https://*.up.railway.app',
+]
+
+# Session and Cookie settings for production
+if not DEBUG:
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SAMESITE = 'Lax'
+    SESSION_COOKIE_SAMESITE = 'Lax'

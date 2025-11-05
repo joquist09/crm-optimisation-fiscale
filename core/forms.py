@@ -58,6 +58,26 @@ class SocieteForm(forms.ModelForm):
             'solde_crtg_gestion', 'paqc_reportee', 'annee_maximale_paqc', 'perte_capitale',
             'pbr_actions_ordinaires', 'capital_verse', 'actions_dividendes_discretionnaires'
         ]
+        labels = {
+            'solde_crtg_operante': 'Solde CRTG opérante ($)',
+            'revenus': 'Revenus ($)',
+            'depenses_deductibles': 'Dépenses déductibles ($)',
+            'depenses_non_deductibles': 'Dépenses non déductibles ($)',
+            'salaire_client': 'Salaire client ($)',
+            'salaire_conjoint': 'Salaire conjoint ($)',
+            'salaire_employe': 'Salaire employé ($)',
+            'dpa_federale': 'DPA fédérale ($)',
+            'dpa_provinciale': 'DPA provinciale ($)',
+            'solde_imrtd_non_determines': 'Solde IMRTD non déterminés ($)',
+            'solde_imrtd_determines': 'Solde IMRTD déterminés ($)',
+            'solde_cdc': 'Solde CDC ($)',
+            'solde_crtg_gestion': 'Solde CRTG gestion ($)',
+            'paqc_reportee': 'PAQC reportée ($)',
+            'perte_capitale': 'Perte capitale ($)',
+            'pbr_actions_ordinaires': 'PBR actions ordinaires ($)',
+            'capital_verse': 'Capital versé ($)',
+            'actions_dividendes_discretionnaires': 'Actions dividendes discrétionnaires ($)',
+        }
         widgets = {
             'client': forms.Select(attrs={'class': 'form-control'}),
             'nom': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom de la société'}),
@@ -104,6 +124,9 @@ class EnfantForm(forms.ModelForm):
             'garderie_subventionnee', 'garderie_non_subventionnee',
             'date_debut', 'date_fin', 'cout_par_jour'
         ]
+        labels = {
+            'cout_par_jour': 'Coût par jour ($)',
+        }
         widgets = {
             'client': forms.Select(attrs={'class': 'form-control'}),
             'nom': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom de l\'enfant'}),
@@ -120,6 +143,9 @@ class RevenusEmploiForm(forms.ModelForm):
     class Meta:
         model = RevenusEmploi
         fields = ['client', 'societe', 'date_debut', 'date_fin', 'revenus_emploi']
+        labels = {
+            'revenus_emploi': 'Revenus d\'emploi ($)',
+        }
         widgets = {
             'client': forms.Select(attrs={'class': 'form-select'}),
             'societe': forms.Select(attrs={'class': 'form-select'}),
@@ -132,6 +158,9 @@ class ActifPlacementsForm(forms.ModelForm):
     class Meta:
         model = ActifPlacements
         fields = ['client', 'type', 'montant', 'description']
+        labels = {
+            'montant': 'Montant ($)',
+        }
         widgets = {
             'client': forms.Select(attrs={'class': 'form-select'}),
             'type': forms.Select(attrs={'class': 'form-select'}),
@@ -156,6 +185,10 @@ class InformationsFiscalesClientForm(forms.ModelForm):
         model = InformationsFiscalesClient
         fields = ['client', 'droits_reer_inutilises', 'droits_celi_inutilises', 
                  'assurance_medicament_privee', 'report_psv']
+        labels = {
+            'droits_reer_inutilises': 'Droits REER inutilisés ($)',
+            'droits_celi_inutilises': 'Droits CELI inutilisés ($)',
+        }
         widgets = {
             'client': forms.Select(attrs={'class': 'form-select'}),
             'droits_reer_inutilises': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
@@ -168,6 +201,9 @@ class BudgetPermanentForm(forms.ModelForm):
     class Meta:
         model = BudgetPermanent
         fields = ['client', 'date_debut_budget_annuel_permanent', 'budget_annuel_permanent']
+        labels = {
+            'budget_annuel_permanent': 'Budget annuel permanent ($)',
+        }
         widgets = {
             'client': forms.Select(attrs={'class': 'form-select'}),
             'date_debut_budget_annuel_permanent': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
@@ -178,6 +214,10 @@ class RevenusEntrepriseForm(forms.ModelForm):
     class Meta:
         model = RevenusEntreprise
         fields = ['client', 'revenus_entreprise', 'date_debut', 'date_fin', 'depenses_deductibles']
+        labels = {
+            'revenus_entreprise': 'Revenus d\'entreprise ($)',
+            'depenses_deductibles': 'Dépenses déductibles ($)',
+        }
         widgets = {
             'client': forms.Select(attrs={'class': 'form-select'}),
             'revenus_entreprise': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),

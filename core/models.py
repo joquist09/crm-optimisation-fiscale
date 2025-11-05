@@ -28,6 +28,9 @@ class Client(models.Model):
     fumeur = models.BooleanField()
     conjoint = models.ForeignKey('self', on_delete=models.CASCADE, related_name="conjoints", null=True, blank=True)
 
+    def __str__(self):
+        return f"{self.prenom} {self.nom}"
+
 class Societe(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     nom = models.CharField(max_length=255)
@@ -68,6 +71,9 @@ class Societe(models.Model):
     pbr_actions_ordinaires = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     capital_verse = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     actions_dividendes_discretionnaires = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+
+    def __str__(self):
+        return f"{self.nom} ({self.get_type_societe_display()})"
 
 class Enfant(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="enfants")
