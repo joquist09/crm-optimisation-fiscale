@@ -58,7 +58,41 @@
             </a>
         </div>
         <div class="col-md-3 col-sm-6">
-            <a href="{% url 'enfant_create' %}?client={{ client.pk }}" class="text-decoration-none">
+        <!-- Budgets permanents -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="text-warning"><i class="fas fa-calendar-check me-2"></i> Budgets permanents ({{ budgets_permanents.count }})</h6>
+                <a href="{% url 'budget_permanent_create' %}?client={{ client.pk }}" class="btn btn-sm btn-outline-warning">
+                    <i class="fas fa-plus me-1"></i> Ajouter
+                </a>
+            </div>
+            {% if budgets_permanents %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date début</th>
+                                <th>Budget annuel</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for budget in budgets_permanents %}
+                            <tr>
+                                <td>{{ budget.date_debut_budget_annuel_permanent|date:"d/m/Y" }}</td>
+                                <td><span class="badge bg-success">{{ budget.budget_annuel_permanent|floatformat:2 }} $</span></td>
+                                <td>
+                                    <a href="{% url 'budget_permanent_edit' budget.pk %}" class="btn btn-sm btn-outline-warning">Modifier</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted small mb-0">Aucun budget permanent</p>
+            {% endif %}
+        </div>
                 <div class="card h-100 border-success hover-shadow">
                     <div class="card-body text-center py-3">
                         <i class="fas fa-child fa-2x text-success mb-2"></i>
@@ -618,38 +652,35 @@
 
         <hr>
 
-        <!-- Revenus RRQ -->
+        <!-- Montant RRQ par année -->
         <div class="mb-4">
             <div class="d-flex justify-content-between align-items-center mb-2">
-                <h6 class="text-success"><i class="fas fa-user-clock me-2"></i> Revenus RRQ ({{ revenus_rrq.count }})</h6>
-                <a href="{% url 'revenus_rrq_create' %}?client={{ client.pk }}" class="btn btn-sm btn-outline-success">
-                    <i class="fas fa-plus me-1"></i> Ajouter
-                </a>
+                <h6 class="text-success"><i class="fas fa-user-clock me-2"></i> Montant RRQ par année</h6>
             </div>
-            {% if revenus_rrq %}
+            <form method="post" action="{% url 'revenus_rrq_bulk_create' client.pk %}">
+                {% csrf_token %}
                 <div class="table-responsive">
-                    <table class="table table-sm table-hover">
+                    <table class="table table-sm table-bordered">
                         <thead>
                             <tr>
-                                <th>Type</th>
-                                <th>Début</th>
-                                <th>Montant</th>
+                                <th>Année</th>
+                                <th>Montant RRQ</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for revenu in revenus_rrq %}
+                            {% for annee in annees_rrq %}
                             <tr>
-                                <td><span class="badge bg-info">{{ revenu.get_type_display }}</span></td>
-                                <td>{{ revenu.date_debut_rrq_rpc|date:"d/m/Y" }}</td>
-                                <td><span class="badge bg-success">{{ revenu.rentes_revenus_rrq_rpc|floatformat:2 }} $</span></td>
+                                <td>{{ annee }}</td>
+                                <td>
+                                    <input type="number" step="0.01" name="montant_{{ annee }}" class="form-control" placeholder="Montant RRQ" />
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
-            {% else %}
-                <p class="text-muted small mb-0">Aucun revenu RRQ</p>
-            {% endif %}
+                <button type="submit" class="btn btn-success mt-2">Enregistrer les montants RRQ</button>
+            </form>
         </div>
 
         <hr>
@@ -722,6 +753,9 @@
                                 <td><span class="badge bg-info">{{ actif.get_type_display }}</span></td>
                                 <td>{{ actif.description }}</td>
                                 <td><span class="badge bg-success">{{ actif.montant|floatformat:2 }} $</span></td>
+                                <td>
+                                    <a href="{% url 'actifs_placements_edit' actif.pk %}" class="btn btn-sm btn-outline-warning">Modifier</a>
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -1031,15 +1065,7 @@
                         <tbody>
                             {% for assurance in assurances_vie %}
                             <tr>
-                                <td>
-                                    {% if assurance.personne_assuree %}
-                                        {{ assurance.personne_assuree }}
-                                    {% elif assurance.personne_assuree_externe %}
-                                        {{ assurance.personne_assuree_externe }}
-                                    {% else %}
-                                        <span class="text-muted">—</span>
-                                    {% endif %}
-                                </td>
+                                <td>{{ assurance.numero_police }}</td>
                                 <td><span class="badge bg-warning">{{ assurance.get_type_display }}</span></td>
                                 <td>
                                     {% if assurance.police_existante %}
@@ -1047,6 +1073,9 @@
                                     {% else %}
                                         <span class="badge bg-secondary">Non</span>
                                     {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'assurances_vie_edit' assurance.pk %}" class="btn btn-sm btn-outline-warning">Modifier</a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -1118,6 +1147,9 @@
                             <tr>
                                 <td>{{ budget.date_debut_budget_annuel_permanent|date:"d/m/Y" }}</td>
                                 <td><span class="badge bg-success">{{ budget.budget_annuel_permanent|floatformat:2 }} $</span></td>
+                                <td>
+                                    <a href="{% url 'budget_permanent_edit' budget.pk %}" class="btn btn-sm btn-outline-warning">Modifier</a>
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>

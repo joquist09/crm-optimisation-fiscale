@@ -1,3 +1,40 @@
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.shortcuts import redirect
+from .models import RevenusRRQ, Client
+
+@csrf_exempt
+@require_POST
+def revenus_rrq_bulk_create(request, client_pk):
+    client = Client.objects.get(pk=client_pk)
+    annees = request.POST.getlist('annees_rrq')
+    # If not using getlist, parse from keys
+    for key in request.POST:
+        if key.startswith('montant_'):
+            annee = key.replace('montant_', '')
+            montant = request.POST.get(key)
+            if montant:
+                RevenusRRQ.objects.create(
+                    client=client,
+                    date_debut_rrq_rpc=f"{annee}-01-01",
+                    rentes_revenus_rrq_rpc=montant,
+                    type='RRQ', # or set default type
+                )
+    return redirect('client_detail', pk=client_pk)
+def budget_permanent_edit(request, pk):
+    budget = get_object_or_404(BudgetPermanent, pk=pk)
+    if request.method == 'POST':
+        form = BudgetPermanentForm(request.POST, instance=budget)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Budget permanent modifié avec succès!')
+            return redirect('client_detail', pk=budget.client.pk)
+    else:
+        form = BudgetPermanentForm(instance=budget)
+    return render(request, 'core/budget_permanent_form.html', {
+        'form': form,
+        'title': 'Modifier le budget permanent'
+    })
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.db.models import Q
@@ -162,6 +199,9 @@ def client_detail(request, pk):
     flux_monetaires = FluxMonetaire.objects.filter(societe__client=client)  # Through relation
     informations_fiscales = client.informationsfiscalesclient_set.all()  # No related_name
     
+    from datetime import datetime
+    current_year = datetime.now().year
+    annees_rrq = list(range(current_year - 10, current_year + 11))
     return render(request, 'core/client_detail.html', {
         'client': client,
         'societes': societes,
@@ -189,6 +229,7 @@ def client_detail(request, pk):
         'budgets_extraordinaires': budgets_extraordinaires,
         'flux_monetaires': flux_monetaires,
         'informations_fiscales': informations_fiscales,
+        'annees_rrq': annees_rrq,
     })
 
 def client_create(request):
@@ -709,21 +750,48 @@ def revenus_rrq_list(request):
 
 def revenus_rrq_create(request):
     """Création d'un revenu RRQ"""
+    from datetime import date
     client_id = request.GET.get('client')
-    if request.method == 'POST':
-        form = RevenusRRQForm(request.POST)
-        if form.is_valid():
-            revenu = form.save()
-            messages.success(request, 'Revenu RRQ créé avec succès!')
-            return redirect('client_detail', pk=revenu.client.pk)
-    else:
-        form = RevenusRRQForm()
-        if client_id:
-            form.fields['client'].initial = client_id
+    client = None
+    years = []
+    if client_id:
+        client = Client.objects.get(pk=client_id)
+        today = date.today()
+        birth_year = client.date_naissance.year
+        current_year = today.year
+        year_18 = birth_year + 18
+        # Only show years from current year up to year_18 (inclusive)
+        years = list(range(current_year, min(year_18, current_year + 1) if current_year > year_18 else year_18 + 1))
     
+    if request.method == 'POST' and client:
+        # Expect POST data: for each year, a value for rentes_revenus_rrq_rpc
+        rrq_type = request.POST.get('type', 'rente')
+        date_debut_rrq_rpc = request.POST.get('date_debut_rrq_rpc')
+        revenu_admissible = request.POST.get('revenu_admissible')
+        created = 0
+        for year in years:
+            montant = request.POST.get(f'rentes_revenus_rrq_rpc_{year}')
+            if montant:
+                RevenusRRQ.objects.create(
+                    client=client,
+                    type=rrq_type,
+                    rentes_revenus_rrq_rpc=montant,
+                    date_debut_rrq_rpc=date_debut_rrq_rpc,
+                    revenu_admissible=revenu_admissible if revenu_admissible else 0,
+                    annee=year
+                )
+                created += 1
+        if created:
+            messages.success(request, f'{created} revenus RRQ créés avec succès!')
+            return redirect('client_detail', pk=client.pk)
+        else:
+            messages.error(request, "Aucun montant saisi.")
+    
+    # For GET, render table
     return render(request, 'core/revenus_rrq_form.html', {
-        'form': form,
-        'title': 'Ajouter un revenu RRQ'
+        'client': client,
+        'years': years,
+        'title': 'Ajouter des revenus RRQ par année'
     })
 
 # Vues Revenus Dividendes

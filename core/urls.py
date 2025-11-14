@@ -1,5 +1,8 @@
 from django.urls import path
 from . import views
+from .views import (
+    revenus_rrq_bulk_create,
+)
 
 urlpatterns = [
     # Dashboard
@@ -53,6 +56,7 @@ urlpatterns = [
     # Revenus RRQ
     path('revenus-rrq/', views.revenus_rrq_list, name='revenus_rrq_list'),
     path('revenus-rrq/nouveau/', views.revenus_rrq_create, name='revenus_rrq_create'),
+    path('revenus_rrq_bulk_create/<int:client_pk>/', revenus_rrq_bulk_create, name='revenus_rrq_bulk_create'),
     
     # Revenus Dividendes
     path('revenus-dividendes/', views.revenus_dividendes_list, name='revenus_dividendes_list'),
@@ -81,6 +85,7 @@ urlpatterns = [
     # Budgets Permanents
     path('budgets-permanents/', views.budget_permanent_list, name='budget_permanent_list'),
     path('budgets-permanents/nouveau/', views.budget_permanent_create, name='budget_permanent_create'),
+    path('budgets-permanents/<int:pk>/modifier/', views.budget_permanent_edit, name='budget_permanent_edit'),
     
     # Budgets Extraordinaires
     path('budgets-extraordinaires/', views.budget_extraordinaire_list, name='budget_extraordinaire_list'),
