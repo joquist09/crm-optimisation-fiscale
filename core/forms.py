@@ -154,6 +154,14 @@ class RevenusEmploiForm(forms.ModelForm):
             'revenus_emploi': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['societe'].queryset = Societe.objects.filter(type_societe='operante')
+        self.fields['societe'].empty_label = 'Employeur externe'
+        
+
+
+
 class ActifPlacementsForm(forms.ModelForm):
     class Meta:
         model = ActifPlacements
@@ -268,6 +276,11 @@ class RevenusDividendesForm(forms.ModelForm):
             'dividende_determine': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'dividende_capital': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
         }
+    def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields['societe'].queryset = Societe.objects.filter(type_societe='gestion')
+            self.fields['societe'].empty_label = 'Autre'
+
 
 class FondPensionCDForm(forms.ModelForm):
     class Meta:

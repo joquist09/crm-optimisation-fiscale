@@ -619,7 +619,7 @@ def export_csv(request):
 
 # Vues Revenus Entreprise
 def revenus_entreprise_list(request):
-    """Liste des revenus d'entreprise"""
+    """Liste des revenus d'entreprise (travailleur autonome)"""
     search = request.GET.get('search', '')
     revenus = RevenusEntreprise.objects.select_related('client').all()
     
